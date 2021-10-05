@@ -1,0 +1,49 @@
+version: '3'
+
+networks:
+    exomoney_network:
+
+services:
+    web:
+        build:
+            context: .
+            dockerfile: docker/nginx/Dockerfile
+        ports:
+            - "8081:80"
+        volumes:
+            - .:/app
+        links:
+            - php
+        networks:
+            - exomoney_network
+
+    php:
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+        volumes:
+            - .:/app/
+        depends_on:
+            - database
+        networks:
+            - exomoney_network
+
+    database:
+        image: postgres:13-alpine
+        environment:
+            - POSTGRES_DB=exomoney_db
+            - POSTGRES_PASSWORD=Silnehaslo_1
+            - POSTGRES_USER=exomoney_user
+        volumes:
+            - ./db_data:/var/lib/postgresql/data:rw
+        networks:
+            - exomoney_network
+
+    mailhog:
+        image: mailhog/mailhog
+        command: ["-smtp-bind-addr", "0.0.0.0:1025"]
+        ports:
+            - 1225:1025 # smtp server
+            - 8225:8025 # web ui
+        networks:
+            - exomoney_network
