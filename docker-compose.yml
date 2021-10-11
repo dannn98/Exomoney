@@ -33,6 +33,8 @@ services:
     database:
         container_name: exomoney_database
         image: postgres:13-alpine
+        ports:
+            - "7654:5432"
         environment:
             - POSTGRES_DB=exomoney_db
             - POSTGRES_PASSWORD=Silnehaslo_1
