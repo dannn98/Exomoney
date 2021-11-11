@@ -40,3 +40,21 @@ services:
             - '@security.password_encoder'
         tags:
             - { name: kernel.event_listener, event: trikoder.oauth2.user_resolve, method: onUserResolve }
+
+    # Controllers
+    App\Controller\AuthController:
+        arguments:
+            - '@app.psr.psr_http_factory'
+
+    # Services
+    app.psr.psr_17_factory:
+        class: Nyholm\Psr7\Factory\Psr17Factory
+
+    app.psr.psr_http_factory:
+        class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory
+        arguments:
+            - '@app.psr.psr_17_factory'
+            - '@app.psr.psr_17_factory'
+            - '@app.psr.psr_17_factory'
+            - '@app.psr.psr_17_factory'
+
