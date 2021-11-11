@@ -46,7 +46,7 @@ class AuthController extends AbstractController
             return $this->respondWithToken($responseData);
         }
 
-        return new JsonResponse(['message' => 'Logowanie nie powiodło się'], 400, []);
+        return new JsonResponse(['message' => 'Logowanie nie powiodło się'], Response::HTTP_BAD_REQUEST, []);
     }
 
     /**
@@ -72,7 +72,7 @@ class AuthController extends AbstractController
             return $this->respondWithToken($responseData);
         }
 
-        return new JsonResponse(['message' =>'Refresh token failed'], 401, []);
+        return new JsonResponse(['message' => 'Refresh token failed'], Response::HTTP_UNAUTHORIZED, []);
     }
 
     protected function requestOauth(array $data, ServerRequestInterface $request): Response
@@ -91,7 +91,7 @@ class AuthController extends AbstractController
             'token_type' => $responseData->token_type,
             'access_token' => $responseData->access_token,
             'expires_in' => $responseData->expires_in,
-        ], 200);
+        ], Response::HTTP_OK);
         $response->headers->setCookie(
             Cookie::create('refresh_token')
                 ->withValue($responseData->refresh_token)
