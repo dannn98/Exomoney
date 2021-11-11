@@ -15,10 +15,11 @@ class UserService
 
     /**
      * @param UserPasswordEncoderInterface $authenticatedUser
+     * @param UserRepository $userRepository
      */
     public function __construct(
         UserPasswordEncoderInterface $authenticatedUser,
-        UserRepository $userRepository
+        UserRepository               $userRepository
     )
     {
         $this->authenticatedUser = $authenticatedUser;

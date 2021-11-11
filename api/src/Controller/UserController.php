@@ -32,7 +32,7 @@ class UserController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
 
-        if($this->userService->createUser($data)) {
+        if ($this->userService->createUser($data)) {
             return new JsonResponse(['message' => 'Dodano użytkownika'], 200, []);
         }
 
