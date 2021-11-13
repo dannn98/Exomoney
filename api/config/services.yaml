@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    oauth2_client_id: '%env(OAUTH2_CLIENT_ID)%'
+    oauth2_secret: '%env(OAUTH2_SECRET)%'
 
 services:
     # default configuration for services in *this* file
@@ -21,5 +23,38 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
+    App\Security\OAuth2Authenticator:
+        arguments:
+            $decorated: '@Trikoder\Bundle\OAuth2Bundle\Security\Guard\Authenticator\OAuth2Authenticator'
+            $userProvider: '@security.user.provider.concrete.app_user_provider'
+
+    app.repository.user_repository:
+        class: App\Repository\UserRepository
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+    App\EventListener\UserResolveListener:
+        arguments:
+            - '@app.repository.user_repository'
+            - '@security.password_encoder'
+        tags:
+            - { name: kernel.event_listener, event: trikoder.oauth2.user_resolve, method: onUserResolve }
+
+    # Controllers
+    App\Controller\AuthController:
+        arguments:
+            - '@app.psr.psr_http_factory'
+
+    # Services
+    app.psr.psr_17_factory:
+        class: Nyholm\Psr7\Factory\Psr17Factory
+
+    app.psr.psr_http_factory:
+        class: Symfony\Bridge\PsrHttpMessage\Factory\PsrHttpFactory
+        arguments:
+            - '@app.psr.psr_17_factory'
+            - '@app.psr.psr_17_factory'
+            - '@app.psr.psr_17_factory'
+            - '@app.psr.psr_17_factory'
+
