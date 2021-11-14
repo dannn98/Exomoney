@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Exception\ApiException;
+use App\Http\ApiResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +18,6 @@ class DefaultController extends AbstractController
     #[Route(name: 'default', methods: ['GET'])]
     public function index(): JsonResponse
     {
-        return new JsonResponse(['message' => 'Exomoney - praca inżynierska by Dawid Dąbek'], Response::HTTP_OK, []);
+        return new ApiResponse('Siema', errors: ['siema' => ['elo']]);
     }
 }
