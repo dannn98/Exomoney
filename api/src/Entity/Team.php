@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use App\Repository\TeamRepository;
+use Doctrine\ORM\Mapping as ORM;
+
 use App\Trait\CreatedAt;
 
 /**
