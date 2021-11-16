@@ -7,6 +7,8 @@ parameters:
     oauth2_client_id: '%env(OAUTH2_CLIENT_ID)%'
     oauth2_secret: '%env(OAUTH2_SECRET)%'
 
+    team_avatars_directory: '%kernel.project_dir%/public/uploads/team/avatars'
+
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -70,3 +72,7 @@ services:
 
     app.normalizer.form_exception_normalizer:
         class: App\Serializer\FormExceptionNormalizer
+
+    App\FileUploader\FileUploader:
+        arguments:
+            $targetDirectory: '%team_avatars_directory%'

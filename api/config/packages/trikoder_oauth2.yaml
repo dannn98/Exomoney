@@ -7,6 +7,15 @@ trikoder_oauth2:
 
         encryption_key: '%env(string:OAUTH2_ENCRYPTION_KEY)%'
 
+        # How long the issued access token should be valid for, used as a default if there is no grant type specific value set.
+        # The value should be a valid interval: http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
+        # access_token_ttl: PT5M
+        access_token_ttl: P1M
+
+        # How long the issued refresh token should be valid for, used as a default if there is no grant type specific value set.
+        # The value should be a valid interval: http://php.net/manual/en/dateinterval.construct.php#refsect1-dateinterval.construct-parameters
+        refresh_token_ttl: P1M
+
     resource_server:
         public_key: /app/api/public.key
 
