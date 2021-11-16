@@ -3,9 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TeamRepository;
+use App\Traits\CreatedAt;
 use Doctrine\ORM\Mapping as ORM;
-
-use App\Trait\CreatedAt;
 
 /**
  * @ORM\Entity(repositoryClass=TeamRepository::class)
