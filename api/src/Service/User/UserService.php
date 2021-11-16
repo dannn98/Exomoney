@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\User;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -14,6 +14,8 @@ class UserService
     private UserRepository $userRepository;
 
     /**
+     * UserService constructor
+     *
      * @param UserPasswordEncoderInterface $authenticatedUser
      * @param UserRepository $userRepository
      */
@@ -27,7 +29,10 @@ class UserService
     }
 
     /**
+     * Create User
+     *
      * @param array $data
+     *
      * @return bool
      */
     public function createUser(array $data): bool

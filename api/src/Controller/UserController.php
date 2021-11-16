@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Service\UserService;
+use App\Service\User\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,17 +15,20 @@ class UserController extends AbstractController
     private UserService $userService;
 
     /**
+     * UserController
+     *
      * @param UserService $userService
      */
-    public function __construct(
-        UserService $userService
-    )
+    public function __construct(UserService $userService)
     {
         $this->userService = $userService;
     }
 
     /**
+     * Create User
+     *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     #[Route(name: 'create', methods: ['POST'])]
