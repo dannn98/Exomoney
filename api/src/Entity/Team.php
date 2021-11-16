@@ -2,8 +2,11 @@
 
 namespace App\Entity;
 
+use App\Trait\CreatedAt;
+
 /**
  * @ORM\Entity(repositoryClass=TeamRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Team
 {
@@ -24,6 +27,14 @@ class Team
      * @ORM\Column(type="string", length=255)
      */
     private string $name;
+
+    /**
+     * @ORM\Column(type="string", length=1024)
+     */
+    private string $avatarUrl;
+
+    //Traits
+    use CreatedAt;
 
     public function getId(): ?int
     {
@@ -52,5 +63,15 @@ class Team
         $this->name = $name;
 
         return $this;
+    }
+
+    public function getAvatarUrl(): string
+    {
+        return $this->avatarUrl;
+    }
+
+    public function setAvatarUrl(string $avatarUrl): void
+    {
+        $this->avatarUrl = $avatarUrl;
     }
 }
