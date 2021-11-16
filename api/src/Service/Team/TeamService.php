@@ -56,7 +56,7 @@ class TeamService
         try {
             $this->teamRepository->save($team);
         } catch (OptimisticLockException | ORMException $e) {
-            //TODO: Coś z tym zrobić
+
         }
 
         return true;
