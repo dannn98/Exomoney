@@ -59,6 +59,8 @@ class TeamService
 
         }
 
+        //TODO: Dodanie właściciela do zespołu
+
         return true;
     }
 }
