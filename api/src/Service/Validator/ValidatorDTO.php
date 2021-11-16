@@ -5,7 +5,7 @@ namespace App\Service\Validator;
 use App\DataObject\DataObjectAbstract;
 use App\Exception\ApiException;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ValidatorDTO
@@ -30,15 +30,27 @@ class ValidatorDTO
     public function validate(DataObjectAbstract $dto, array $groups = [])
     {
         $violations = $this->validator->validate($dto, groups: $groups);
-        $errors = array();
 
         if (count($violations) > 0) {
-            /** @var ConstraintViolation $violation */
-            foreach ($violations as $violation) {
-                $errors[$violation->getPropertyPath()][] = $violation->getMessage();
-            }
-
-            throw new ApiException('Validation exception', $errors, Response::HTTP_UNPROCESSABLE_ENTITY);
+            throw new ApiException('Validation exception', $this->buildViolationsArray($violations), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+    }
+
+    /**
+     * Build violations array
+     *
+     * @param ConstraintViolationListInterface $violations
+     *
+     * @return array
+     */
+    private function buildViolationsArray(ConstraintViolationListInterface $violations): array
+    {
+        $errors = array();
+
+        foreach ($violations as $violation) {
+            $errors[$violation->getPropertyPath()][] = $violation->getMessage();
+        }
+
+        return $errors;
     }
 }
