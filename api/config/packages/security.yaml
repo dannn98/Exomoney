@@ -22,7 +22,7 @@ security:
 #            lazy: true
 #            provider: app_user_provider
         unsecure:
-            pattern: ^/api/v1/((auth/login)|(auth/refresh-token)|(user/create)|(default))$ #TODO: refresh-token, default
+            pattern: ^/api/v1/((auth/login)|(auth/refresh-token)|(user)|(default))$ #TODO: refresh-token, default
             security: false
         secure:
             pattern: ^/api/v1
