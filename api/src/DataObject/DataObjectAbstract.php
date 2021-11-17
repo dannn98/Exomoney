@@ -7,7 +7,7 @@ use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionType;
 
-abstract class DataObjectAbstract
+abstract class DataObjectAbstract implements DataObjectInterface
 {
     public function __construct(array $parameters) {
 

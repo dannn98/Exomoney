@@ -11,6 +11,8 @@ class UserDataObject extends DataObjectAbstract
     public ?string $email;
 
     #[Assert\NotBlank(message: "Pole nie może być puste")]
-    #[Assert\Length(min: 8, max: 32, minMessage: 'Pole jest za krótkie.', maxMessage: 'Pole jest za długie')]
+    #[Assert\Length(
+        min: self::MIN_PASSWORD_LENGTH, max: self::MAX_PASSWORD_LENGTH,
+        minMessage: 'Pole jest za krótkie.', maxMessage: 'Pole jest za długie')]
     public ?string $password;
 }
