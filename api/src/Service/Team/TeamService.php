@@ -45,21 +45,20 @@ class TeamService implements TeamServiceInterface
     {
         $this->validator->validate($dto);
 
-        //TODO: Obsłużyć jeśli null
-        $avatarUrl = $this->fileUploader->upload($dto->avatar_file);
+        //TODO: Do stałej
+        $avatarUrl = isset($dto->avatar_file) ? $this->fileUploader->upload($dto->avatar_file) : 'default.png';
 
         $team = new Team();
         $team->setOwner($user);
         $team->setName($dto->name);
         $team->setAvatarUrl($avatarUrl);
+        $team->addUser($user);
 
         try {
             $this->teamRepository->save($team);
         } catch (OptimisticLockException | ORMException $e) {
 
         }
-
-        //TODO: Dodanie właściciela do zespołu
 
         return true;
     }
