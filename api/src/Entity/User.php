@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use App\Traits\CreatedAt;
+use App\Traits\ModifiedAt;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -34,6 +36,10 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private ?string $password;
+
+    //Traits
+    use CreatedAt;
+    use ModifiedAt;
 
     public function getId(): ?int
     {

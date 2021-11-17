@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TeamRepository;
 use App\Traits\CreatedAt;
+use App\Traits\ModifiedAt;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -37,6 +38,7 @@ class Team
 
     //Traits
     use CreatedAt;
+    use ModifiedAt;
 
     public function getId(): ?int
     {
