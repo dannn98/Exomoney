@@ -13,6 +13,7 @@ class TeamDataObject extends DataObjectAbstract
     public ?string $name;
 
     #[Assert\Image(
+        //TODO: Zawęzić do wybranych typów
         minWidth: 128, maxWidth: 128, maxHeight: 128, minHeight: 128,
         maxWidthMessage: 'Niepoprawny rozmiar awatara.', minWidthMessage: 'Niepoprawny rozmiar awatara.',
         maxHeightMessage: 'Niepoprawny rozmiar awatara.', minHeightMessage: 'Niepoprawny rozmiar awatara.'
