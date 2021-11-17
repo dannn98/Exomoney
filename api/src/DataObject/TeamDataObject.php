@@ -12,9 +12,12 @@ class TeamDataObject extends DataObjectAbstract
     #[Assert\Length(min: 4, max: 32, minMessage: 'Pole jest za krótkie.', maxMessage: 'Pole jest za długie')]
     public ?string $name;
 
+    #[Assert\File(maxSize: '2M', maxSizeMessage: 'Niepoprawny rozmiar pliku.')]
     #[Assert\Image(
-        //TODO: Zawęzić do wybranych typów
-        minWidth: 128, maxWidth: 128, maxHeight: 128, minHeight: 128,
+        mimeTypes: ['image/png', 'image/jpeg'],
+        minWidth: 128,
+        maxWidth: 128, maxHeight: 128, minHeight: 128,
+        mimeTypesMessage: 'Niepoprawny format pliku.',
         maxWidthMessage: 'Niepoprawny rozmiar awatara.', minWidthMessage: 'Niepoprawny rozmiar awatara.',
         maxHeightMessage: 'Niepoprawny rozmiar awatara.', minHeightMessage: 'Niepoprawny rozmiar awatara.'
     )]
