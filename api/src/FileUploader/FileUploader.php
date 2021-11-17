@@ -11,12 +11,25 @@ class FileUploader
     private string $targetDirectory;
     private SluggerInterface $slugger;
 
+    /**
+     * FileUploader constructor
+     *
+     * @param string $targetDirectory
+     * @param SluggerInterface $slugger
+     */
     public function __construct(string $targetDirectory, SluggerInterface $slugger)
     {
         $this->targetDirectory = $targetDirectory;
         $this->slugger = $slugger;
     }
 
+    /**
+     * Upload method
+     *
+     * @param UploadedFile $file
+     *
+     * @return string
+     */
     public function upload(UploadedFile $file): string
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
@@ -32,6 +45,11 @@ class FileUploader
         return $fileName;
     }
 
+    /**
+     * Get target directory
+     *
+     * @return string
+     */
     public function getTargetDirectory(): string
     {
         return $this->targetDirectory;

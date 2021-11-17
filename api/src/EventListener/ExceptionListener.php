@@ -55,7 +55,7 @@ class ExceptionListener
     {
         $normalizer = $this->normalizerFactory->getNormalizer($exception);
         $statusCode = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
-        $data = $exception instanceof ApiException ? $exception->getData() : null; //TODO:
+        $data = $exception instanceof ApiException ? $exception->getData() : null;
 
         try {
             $errors = $normalizer ? $normalizer->normalize($exception) : [];

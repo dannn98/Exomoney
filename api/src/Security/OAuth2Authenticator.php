@@ -17,6 +17,7 @@ use Trikoder\Bundle\OAuth2Bundle\Security\Guard\Authenticator\OAuth2Authenticato
 
 class OAuth2Authenticator implements AuthenticatorInterface
 {
+    //TODO: Refactoring
     private TrikoderOAuth2Authenticator $decorated;
     private UserProviderInterface $userProvider;
 

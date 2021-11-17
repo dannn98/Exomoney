@@ -8,17 +8,12 @@ use Trikoder\Bundle\OAuth2Bundle\Event\UserResolveEvent;
 
 class UserResolveListener
 {
-    /**
-     * @var UserProviderInterface
-     */
-    private $userProvider;
+    private UserProviderInterface $userProvider;
+    private UserPasswordEncoderInterface $userPasswordEncoder;
 
     /**
-     * @var UserPasswordEncoderInterface
-     */
-    private $userPasswordEncoder;
-
-    /**
+     * UserResolveListener constructor
+     *
      * @param UserProviderInterface $userProvider
      * @param UserPasswordEncoderInterface $userPasswordEncoder
      */
@@ -29,13 +24,15 @@ class UserResolveListener
     }
 
     /**
+     * User resolve
+     *
      * @param UserResolveEvent $event
      */
     public function onUserResolve(UserResolveEvent $event): void
     {
         $user = $this->userProvider->loadUserByUsername($event->getUsername());
 
-        if (null === $user) {
+        if ($user === null) {
             return;
         }
 
