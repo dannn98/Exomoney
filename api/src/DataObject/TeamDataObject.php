@@ -12,6 +12,10 @@ class TeamDataObject extends DataObjectAbstract
     #[Assert\Length(min: 4, max: 32, minMessage: 'Pole jest za krótkie.', maxMessage: 'Pole jest za długie')]
     public ?string $name;
 
-    //TODO: Walidacja pliku
+    #[Assert\Image(
+        minWidth: 128, maxWidth: 128, maxHeight: 128, minHeight: 128,
+        maxWidthMessage: 'Niepoprawny rozmiar awatara.', minWidthMessage: 'Niepoprawny rozmiar awatara.',
+        maxHeightMessage: 'Niepoprawny rozmiar awatara.', minHeightMessage: 'Niepoprawny rozmiar awatara.'
+    )]
     public ?UploadedFile $avatar_file;
 }
