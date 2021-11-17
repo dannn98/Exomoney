@@ -1,7 +1,7 @@
 trikoder_oauth2:
 
     authorization_server:
-        private_key: /app/api/private.key
+        private_key: /app/api/private.key #TODO: Do sprawdzenia czy nie powinno być wyłączone z pusha
 #        private_key_passphrase: '%env(string:PRIVATE_KEY_PASSPHRASE)%'
         private_key_passphrase: null
 
