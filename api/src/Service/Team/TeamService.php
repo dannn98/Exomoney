@@ -12,7 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class TeamService
+class TeamService implements TeamServiceInterface
 {
     private ValidatorDTO $validator;
     private FileUploader $fileUploader;

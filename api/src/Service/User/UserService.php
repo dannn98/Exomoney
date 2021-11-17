@@ -11,7 +11,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserService
+class UserService implements UserServiceInterface
 {
     private ValidatorDTO $validator;
     private UserPasswordEncoderInterface $authenticatedUser;

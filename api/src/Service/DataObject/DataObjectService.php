@@ -5,7 +5,7 @@ namespace App\Service\DataObject;
 use App\DataObject\DataObjectAbstract;
 use Symfony\Component\HttpFoundation\Request;
 
-class DataObjectService
+class DataObjectService implements DataObjectServiceInterface
 {
     /**
      * Create DTO object form request

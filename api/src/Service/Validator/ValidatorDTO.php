@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ValidatorDTO
+class ValidatorDTO implements ValidatorDTOInterface
 {
     private ValidatorInterface $validator;
 
