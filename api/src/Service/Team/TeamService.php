@@ -45,8 +45,7 @@ class TeamService implements TeamServiceInterface
     {
         $this->validator->validate($dto);
 
-        //TODO: Do stałej
-        $avatarUrl = isset($dto->avatar_file) ? $this->fileUploader->upload($dto->avatar_file) : 'default.png';
+        $avatarUrl = isset($dto->avatar_file) ? $this->fileUploader->upload($dto->avatar_file) : self::DEFAULT_AVATAR;
 
         $team = new Team();
         $team->setOwner($user);
