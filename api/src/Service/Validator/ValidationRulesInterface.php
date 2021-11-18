@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DataObject;
+namespace App\Service\Validator;
 
-interface DataObjectInterface
+interface ValidationRulesInterface
 {
     const MIN_STRING_LENGTH = 4;
     const MAX_STRING_LENGTH = 32;

@@ -2,12 +2,13 @@
 
 namespace App\DataObject;
 
+use App\Service\Validator\ValidationRulesInterface;
 use ReflectionClass;
 use ReflectionNamedType;
 use ReflectionProperty;
 use ReflectionType;
 
-abstract class DataObjectAbstract implements DataObjectInterface
+abstract class DataObjectAbstract implements ValidationRulesInterface
 {
     public function __construct(array $parameters) {
 
