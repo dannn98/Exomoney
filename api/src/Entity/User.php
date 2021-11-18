@@ -18,6 +18,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface
 {
+    //Traits
+    use CreatedAt;
+    use ModifiedAt;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -49,10 +53,6 @@ class User implements UserInterface
     {
         $this->teams = new ArrayCollection();
     }
-
-    //Traits
-    use CreatedAt;
-    use ModifiedAt;
 
     public function getId(): ?int
     {

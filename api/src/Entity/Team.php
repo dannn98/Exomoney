@@ -15,6 +15,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Team
 {
+    //Traits
+    use CreatedAt;
+    use ModifiedAt;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -43,14 +47,16 @@ class Team
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity=TeamAccessCode::class, mappedBy="team")
+     */
+    private $teamAccessCodes;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->teamAccessCodes = new ArrayCollection();
     }
-
-    //Traits
-    use CreatedAt;
-    use ModifiedAt;
 
     public function getId(): ?int
     {
@@ -113,6 +119,36 @@ class Team
     {
         if ($this->users->removeElement($user)) {
             $user->removeTeam($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TeamAccessCode[]
+     */
+    public function getTeamAccessCodes(): Collection
+    {
+        return $this->teamAccessCodes;
+    }
+
+    public function addTeamAccessCode(TeamAccessCode $teamAccessCode): self
+    {
+        if (!$this->teamAccessCodes->contains($teamAccessCode)) {
+            $this->teamAccessCodes[] = $teamAccessCode;
+            $teamAccessCode->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeamAccessCode(TeamAccessCode $teamAccessCode): self
+    {
+        if ($this->teamAccessCodes->removeElement($teamAccessCode)) {
+            // set the owning side to null (unless already changed)
+            if ($teamAccessCode->getTeam() === $this) {
+                $teamAccessCode->setTeam(null);
+            }
         }
 
         return $this;
