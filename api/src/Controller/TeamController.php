@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\DataObject\TeamDataObject;
 use App\Exception\ApiException;
 use App\Http\ApiResponse;
-use App\Service\DataObject\DataObjectService;
-use App\Service\Team\TeamService;
+use App\Service\DataObject\DataObjectServiceInterface;
+use App\Service\Team\TeamServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,16 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/team', name: 'team.')]
 class TeamController extends AbstractController
 {
-    private DataObjectService $dataObjectService;
-    private TeamService $teamService;
+    private DataObjectServiceInterface $dataObjectService;
+    private TeamServiceInterface $teamService;
 
     /**
      * TeamController constructor
      *
-     * @param DataObjectService $dataObjectService
-     * @param TeamService $teamService
+     * @param DataObjectServiceInterface $dataObjectService
+     * @param TeamServiceInterface $teamService
      */
-    public function __construct(DataObjectService $dataObjectService, TeamService $teamService)
+    public function __construct(DataObjectServiceInterface $dataObjectService, TeamServiceInterface $teamService)
     {
         $this->dataObjectService = $dataObjectService;
         $this->teamService = $teamService;

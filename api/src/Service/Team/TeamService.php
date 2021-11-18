@@ -8,24 +8,25 @@ use App\Exception\ApiException;
 use App\FileUploader\FileUploader;
 use App\Repository\TeamRepository;
 use App\Service\Validator\ValidatorDTO;
+use App\Service\Validator\ValidatorDTOInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class TeamService implements TeamServiceInterface
 {
-    private ValidatorDTO $validator;
+    private ValidatorDTOInterface $validator;
     private FileUploader $fileUploader;
     private TeamRepository $teamRepository;
 
     /**
      * TeamService constructor
      *
-     * @param ValidatorDTO $validator
+     * @param ValidatorDTOInterface $validator
      * @param FileUploader $fileUploader
      * @param TeamRepository $teamRepository
      */
-    public function __construct(ValidatorDTO $validator, FileUploader $fileUploader, TeamRepository $teamRepository)
+    public function __construct(ValidatorDTOInterface $validator, FileUploader $fileUploader, TeamRepository $teamRepository)
     {
         $this->validator = $validator;
         $this->fileUploader = $fileUploader;

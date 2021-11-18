@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Service\TeamAccessCode;
+
+use App\DataObject\TeamAccessCodeDataObject;
+use App\Entity\TeamAccessCode;
+use App\Exception\ApiException;
+use App\Repository\TeamAccessCodeRepository;
+use App\Repository\TeamRepository;
+use App\Service\Validator\ValidatorDTOInterface;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+class TeamAccessCodeService implements TeamAccessCodeServiceInterface
+{
+    private ValidatorDTOInterface $validator;
+    private TeamAccessCodeRepository $teamAccessCodeRepository;
+    private TeamRepository $teamRepository;
+
+    /**
+     * TeamAccessCodeService constructor
+     *
+     * @param ValidatorDTOInterface $validator
+     * @param TeamAccessCodeRepository $teamAccessCodeRepository
+     * @param TeamRepository $teamRepository
+     */
+    public function __construct(
+        ValidatorDTOInterface    $validator,
+        TeamAccessCodeRepository $teamAccessCodeRepository,
+        TeamRepository           $teamRepository
+    )
+    {
+        $this->validator = $validator;
+        $this->teamAccessCodeRepository = $teamAccessCodeRepository;
+        $this->teamRepository = $teamRepository;
+    }
+
+    /**
+     * @throws ApiException
+     */
+    public function addTeamAccessCode(TeamAccessCodeDataObject $dto, UserInterface $user): bool
+    {
+        $this->validator->validate($dto);
+
+        $team = $this->teamRepository->find($dto->team_id);
+
+        if($team === null) {
+            throw new ApiException('Zespół o podanym id nie istnieje', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        //TODO: Serwis do generowania losowych kodów
+        $code = 'xxxxxxxxxxxx';
+
+        $teamAccessCode = new TeamAccessCode();
+        $teamAccessCode->setTeam($team);
+        $teamAccessCode->setCode($code);
+        $teamAccessCode->setNumberOfUses($dto->number_of_uses ?? null);
+        $teamAccessCode->setExpireTime($dto->expire_time ?? null);
+
+        try {
+            //TODO: Do transakcji
+            $this->teamAccessCodeRepository->delete($team->getTeamAccessCodes());
+            $this->teamAccessCodeRepository->save($teamAccessCode);
+        } catch (OptimisticLockException | ORMException $e) {
+
+        }
+
+        return true;
+    }
+}

@@ -48,7 +48,7 @@ class Team
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity=TeamAccessCode::class, mappedBy="team")
+     * @ORM\OneToMany(targetEntity=TeamAccessCode::class, mappedBy="team", fetch="EAGER")
      */
     private $teamAccessCodes;
 
@@ -124,9 +124,6 @@ class Team
         return $this;
     }
 
-    /**
-     * @return Collection|TeamAccessCode[]
-     */
     public function getTeamAccessCodes(): Collection
     {
         return $this->teamAccessCodes;

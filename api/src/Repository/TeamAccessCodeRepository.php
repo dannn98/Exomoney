@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use App\Entity\TeamAccessCode;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +20,28 @@ class TeamAccessCodeRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, TeamAccessCode::class);
+    }
+
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     */
+    public function save(TeamAccessCode $teamAccessCode)
+    {
+        $this->getEntityManager()->persist($teamAccessCode);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     */
+    public function delete(Collection $teamAccessCodes)
+    {
+        foreach ($teamAccessCodes as $teamAccessCode) {
+            $this->getEntityManager()->remove($teamAccessCode);
+        }
+        $this->getEntityManager()->flush();
     }
 
     // /**

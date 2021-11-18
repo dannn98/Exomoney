@@ -7,25 +7,26 @@ use App\Entity\User;
 use App\Exception\ApiException;
 use App\Repository\UserRepository;
 use App\Service\Validator\ValidatorDTO;
+use App\Service\Validator\ValidatorDTOInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserService implements UserServiceInterface
 {
-    private ValidatorDTO $validator;
+    private ValidatorDTOInterface $validator;
     private UserPasswordEncoderInterface $authenticatedUser;
     private UserRepository $userRepository;
 
     /**
      * UserService constructor
      *
-     * @param ValidatorDTO $validator
+     * @param ValidatorDTOInterface $validator
      * @param UserPasswordEncoderInterface $authenticatedUser
      * @param UserRepository $userRepository
      */
     public function __construct(
-        ValidatorDTO $validator,
+        ValidatorDTOInterface $validator,
         UserPasswordEncoderInterface $authenticatedUser,
         UserRepository               $userRepository
     )

@@ -5,8 +5,8 @@ namespace App\Controller;
 use App\DataObject\UserDataObject;
 use App\Exception\ApiException;
 use App\Http\ApiResponse;
-use App\Service\DataObject\DataObjectService;
-use App\Service\User\UserService;
+use App\Service\DataObject\DataObjectServiceInterface;
+use App\Service\User\UserServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,16 +15,16 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/user', name: 'user.')]
 class UserController extends AbstractController
 {
-    private DataObjectService $dataObjectService;
-    private UserService $userService;
+    private DataObjectServiceInterface $dataObjectService;
+    private UserServiceInterface $userService;
 
     /**
      * UserController
      *
-     * @param DataObjectService $dataObjectService
-     * @param UserService $userService
+     * @param DataObjectServiceInterface $dataObjectService
+     * @param UserServiceInterface $userService
      */
-    public function __construct(DataObjectService $dataObjectService, UserService $userService)
+    public function __construct(DataObjectServiceInterface $dataObjectService, UserServiceInterface $userService)
     {
         $this->dataObjectService = $dataObjectService;
         $this->userService = $userService;

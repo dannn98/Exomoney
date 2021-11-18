@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=TeamAccessCodeRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class TeamAccessCode
 {
