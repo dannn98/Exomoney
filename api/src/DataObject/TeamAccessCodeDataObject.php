@@ -10,9 +10,11 @@ class TeamAccessCodeDataObject extends DataObjectAbstract
     #[Assert\Positive(message: 'Pole musi być typu int.')]
     public ?int $team_id;
 
-    #[Assert\Positive(message: 'Pole musi być typu int.')]
-    public ?string $number_of_uses;
+    #[Assert\Type(type: 'integer', message: 'Pole musi być typu int.')]
+    #[Assert\Positive(message: 'Podana liczba musi być dodatnia.')]
+    public ?int $number_of_uses;
 
+    //TODO: Dodać Timezone jak będę koksem
     #[Assert\DateTime(message: 'Pole musi być w formacie \'Y-m-d H:i:s\'.')]
-    public ?\DateTimeInterface $expire_time;
+    public ?string $expire_time;
 }
