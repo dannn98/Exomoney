@@ -4,6 +4,7 @@ namespace App\Service\TeamAccessCode;
 
 use App\DataObject\TeamAccessCodeDataObject;
 use App\Entity\TeamAccessCode;
+use App\EntityManager\Transaction;
 use App\Exception\ApiException;
 use App\Repository\TeamAccessCodeRepository;
 use App\Repository\TeamRepository;
@@ -66,11 +67,13 @@ class TeamAccessCodeService implements TeamAccessCodeServiceInterface
         $teamAccessCode->setExpireTime(isset($dto->expire_time) ? new \DateTime($dto->expire_time) : null);
 
         try {
-            //TODO: Do transakcji
+            Transaction::beginTransaction();
             $this->teamAccessCodeRepository->delete($team->getTeamAccessCodes());
             $this->teamAccessCodeRepository->save($teamAccessCode);
-        } catch (OptimisticLockException | ORMException $e) {
-
+            Transaction::commit();
+        } catch (OptimisticLockException | ORMException | Exception $e) {
+            Transaction::rollback();
+            throw $e;
         }
 
         return true;
