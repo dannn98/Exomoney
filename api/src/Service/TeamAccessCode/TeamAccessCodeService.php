@@ -45,6 +45,8 @@ class TeamAccessCodeService implements TeamAccessCodeServiceInterface
     }
 
     /**
+     * Add TeamAccessCode
+     *
      * @throws ApiException
      * @throws Exception
      */
