@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DataObject\TeamAccessCodeDataObject;
 use App\DataObject\TeamDataObject;
 use App\Exception\ApiException;
 use App\Http\ApiResponse;
@@ -33,7 +34,8 @@ class TeamController extends AbstractController
     /**
      * Create Team
      *
-     * @throws ApiException
+     * @param Request $request
+     * @return ApiResponse
      */
     #[Route(name: 'create', methods: ['POST'])]
     public function create(Request $request): ApiResponse
@@ -43,5 +45,21 @@ class TeamController extends AbstractController
         $this->teamService->createTeam($teamDTO, $this->getUser());
 
         return new ApiResponse('Pomyślnie utworzono zespół', data: true, status: Response::HTTP_CREATED);
+    }
+
+    /**
+     * Join to Team
+     *
+     * @param Request $request
+     * @return ApiResponse
+     */
+    #[Route(path: '/join', name: 'join', methods: ['POST'])]
+    public function join(Request $request): ApiResponse
+    {
+        $teamAccessCodeDTO = $this->dataObjectService->create($request, TeamAccessCodeDataObject::class);
+
+        $this->teamService->joinTeam($teamAccessCodeDTO, $this->getUser());
+
+        return new ApiResponse('Pomyślnie dodano użytkownika do zespołu', data: true, status: Response::HTTP_OK);
     }
 }
