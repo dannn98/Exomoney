@@ -52,10 +52,16 @@ class Team
      */
     private $teamAccessCodes;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Debt::class, mappedBy="team")
+     */
+    private $debts;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
         $this->teamAccessCodes = new ArrayCollection();
+        $this->debts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,6 +151,36 @@ class Team
             // set the owning side to null (unless already changed)
             if ($teamAccessCode->getTeam() === $this) {
                 $teamAccessCode->setTeam(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Debt[]
+     */
+    public function getDebts(): Collection
+    {
+        return $this->debts;
+    }
+
+    public function addDebt(Debt $debt): self
+    {
+        if (!$this->debts->contains($debt)) {
+            $this->debts[] = $debt;
+            $debt->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDebt(Debt $debt): self
+    {
+        if ($this->debts->removeElement($debt)) {
+            // set the owning side to null (unless already changed)
+            if ($debt->getTeam() === $this) {
+                $debt->setTeam(null);
             }
         }
 
