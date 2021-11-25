@@ -8,6 +8,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class FormExceptionNormalizer implements NormalizerInterface
 {
     /**
+     * Normalize exception
+     *
      * @param FormException $exception
      * @param string|null $format
      * @param array $context

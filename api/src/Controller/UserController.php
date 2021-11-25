@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
-use App\Service\UserService;
+use App\DataObject\UserDataObject;
+use App\Exception\ApiException;
+use App\Http\ApiResponse;
+use App\Service\DataObject\DataObjectServiceInterface;
+use App\Service\User\UserServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,31 +15,36 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/user', name: 'user.')]
 class UserController extends AbstractController
 {
-    private UserService $userService;
+    private DataObjectServiceInterface $dataObjectService;
+    private UserServiceInterface $userService;
 
     /**
-     * @param UserService $userService
+     * UserController
+     *
+     * @param DataObjectServiceInterface $dataObjectService
+     * @param UserServiceInterface $userService
      */
-    public function __construct(
-        UserService $userService
-    )
+    public function __construct(DataObjectServiceInterface $dataObjectService, UserServiceInterface $userService)
     {
+        $this->dataObjectService = $dataObjectService;
         $this->userService = $userService;
     }
 
     /**
+     * Create User
+     *
      * @param Request $request
-     * @return JsonResponse
+     *
+     * @return ApiResponse
+     * @throws ApiException
      */
     #[Route(name: 'create', methods: ['POST'])]
-    public function create(Request $request): JsonResponse
+    public function create(Request $request): ApiResponse
     {
-        $data = json_decode($request->getContent(), true);
+        $userDTO = $this->dataObjectService->create($request, UserDataObject::class);
 
-        if ($this->userService->createUser($data)) {
-            return new JsonResponse(['message' => 'Dodano użytkownika'], Response::HTTP_CREATED, []);
-        }
+        $this->userService->createUser($userDTO);
 
-        return new JsonResponse(['message' => 'Wystąpił błąd'], Response::HTTP_CONFLICT, []);
+        return new ApiResponse('Pomyślnie utworzono użytkownika', data: true, status: Response::HTTP_CREATED);
     }
 }

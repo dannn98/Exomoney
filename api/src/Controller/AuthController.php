@@ -16,6 +16,11 @@ class AuthController extends AbstractController
 {
     private PsrHttpFactory $psrHttpFactory;
 
+    /**
+     * AuthController constructor
+     *
+     * @param PsrHttpFactory $psrHttpFactory
+     */
     public function __construct(
         PsrHttpFactory $psrHttpFactory
     )
@@ -24,7 +29,10 @@ class AuthController extends AbstractController
     }
 
     /**
+     * Login
+     *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     #[Route('/login', name: 'login', methods: ['POST'])]
@@ -50,7 +58,10 @@ class AuthController extends AbstractController
     }
 
     /**
+     * Refresh token
+     *
      * @param Request $request
+     *
      * @return JsonResponse
      */
     #[Route('/refresh-token', name: 'refresh-token', methods: ['POST'])]
