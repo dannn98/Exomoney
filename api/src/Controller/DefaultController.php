@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Exception\ApiException;
+use App\Fixtures\FixturesService;
 use App\Http\ApiResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,6 +19,8 @@ class DefaultController extends AbstractController
     #[Route(name: 'default', methods: ['GET'])]
     public function index(): JsonResponse
     {
+        $x = new FixturesService();
+        $x->generate();
         return new ApiResponse('Siema', errors: ['siema' => ['elo']]);
     }
 }
