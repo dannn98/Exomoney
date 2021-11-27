@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Debt;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,6 +18,17 @@ class DebtRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Debt::class);
+    }
+
+    /**
+     * @throws ORMException
+     */
+    public function save(array $debtCollection)
+    {
+        foreach ($debtCollection as $debt) {
+            $this->getEntityManager()->persist($debt);
+        }
+        $this->getEntityManager()->flush();
     }
 
     // /**

@@ -33,6 +33,7 @@ class DebtController extends AbstractController
      * Add Debt
      *
      * @param Request $request
+     *
      * @return ApiResponse
      */
     #[Route(name: 'add', methods: ['POST'])]
