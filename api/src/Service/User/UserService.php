@@ -49,6 +49,7 @@ class UserService implements UserServiceInterface
 
         $user = new User();
         $user->setEmail($dto->email);
+        $user->setNickname($dto->nickname);
         $user->setPassword($this->authenticatedUser->encodePassword($user, $dto->password));
 
         try {

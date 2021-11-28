@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -27,12 +28,20 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['Get_debt_list'])]
     private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
+    #[Groups(['Get_debt_list'])]
     private ?string $email;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    #[Groups(['Get_debt_list'])]
+    private $nickname;
 
     /**
      * @ORM\Column(type="json")
@@ -49,9 +58,21 @@ class User implements UserInterface
      */
     private $teams;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Debt::class, mappedBy="debtor")
+     */
+    private $debts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Debt::class, mappedBy="creditor")
+     */
+    private $credits;
+
     public function __construct()
     {
         $this->teams = new ArrayCollection();
+        $this->debts = new ArrayCollection();
+        $this->credits = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -164,6 +185,78 @@ class User implements UserInterface
     public function removeTeam(Team $team): self
     {
         $this->teams->removeElement($team);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Debt[]
+     */
+    public function getDebts(): Collection
+    {
+        return $this->debts;
+    }
+
+    public function addDebt(Debt $debt): self
+    {
+        if (!$this->debts->contains($debt)) {
+            $this->debts[] = $debt;
+            $debt->setDebtor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeDebt(Debt $debt): self
+    {
+        if ($this->debts->removeElement($debt)) {
+            // set the owning side to null (unless already changed)
+            if ($debt->getDebtor() === $this) {
+                $debt->setDebtor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Debt[]
+     */
+    public function getCredits(): Collection
+    {
+        return $this->credits;
+    }
+
+    public function addCredit(Debt $credit): self
+    {
+        if (!$this->credits->contains($credit)) {
+            $this->credits[] = $credit;
+            $credit->setCreditor($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCredit(Debt $credit): self
+    {
+        if ($this->credits->removeElement($credit)) {
+            // set the owning side to null (unless already changed)
+            if ($credit->getCreditor() === $this) {
+                $credit->setCreditor(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(string $nickname): self
+    {
+        $this->nickname = $nickname;
 
         return $this;
     }
