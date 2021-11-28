@@ -23,7 +23,7 @@ class DebtRepository extends ServiceEntityRepository
     /**
      * @throws ORMException
      */
-    public function save(array $debtCollection)
+    public function saveCollection(array $debtCollection)
     {
         foreach ($debtCollection as $debt) {
             $this->getEntityManager()->persist($debt);
