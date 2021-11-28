@@ -80,7 +80,7 @@ class TeamController extends AbstractController
      * @return ApiResponse
      */
     #[Route(path: '/{teamId}/debts', name: 'debts', methods: ['GET'])]
-    public function getList(int $teamId): ApiResponse
+    public function getDebtList(int $teamId): ApiResponse
     {
         $debtCollection = $this->debtService->getDebtList($teamId, $this->getUser());
 
