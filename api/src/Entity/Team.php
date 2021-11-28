@@ -53,7 +53,7 @@ class Team
     private $teamAccessCodes;
 
     /**
-     * @ORM\OneToMany(targetEntity=Debt::class, mappedBy="team")
+     * @ORM\OneToMany(targetEntity=Debt::class, mappedBy="team", fetch="EAGER")
      */
     private $debts;
 

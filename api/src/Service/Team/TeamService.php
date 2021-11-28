@@ -84,7 +84,7 @@ class TeamService implements TeamServiceInterface
      */
     public function joinTeam(TeamAccessCodeDataObject $dto, UserInterface $user): bool
     {
-        $this->validator->validate($dto, [$dto::JOIN]);
+        $this->validator->validate($dto, [$dto::JOIN_GROUP]);
 
         try {
             $teamAccessCode = $this->teamAccessCodeRepository->findOneBy(['code' => $dto->code]);
