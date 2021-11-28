@@ -6,12 +6,14 @@ use DateTimeInterface;
 use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 trait CreatedAt
 {
     /**
      * @ORM\Column(type="datetime", nullable=false)
      */
+    #[Groups(['Get_debt_list'])]
     private DateTimeInterface $createdAt;
 
     /**

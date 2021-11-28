@@ -15,9 +15,9 @@ trait ModifiedAt
     private ?DateTimeInterface $modifiedAt;
 
     /**
-     * @return DateTimeInterface
+     * @return ?DateTimeInterface
      */
-    public function getModifiedAt(): DateTimeInterface
+    public function getModifiedAt(): ?DateTimeInterface
     {
         return $this->modifiedAt;
     }
