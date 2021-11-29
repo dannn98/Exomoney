@@ -34,8 +34,8 @@ class TeamAccessCodeController extends AbstractController
     {
         $teamAccessCodeDTO = $this->dataObjectService->create($request, TeamAccessCodeDataObject::class);
 
-        $this->teamAccessCodeService->addTeamAccessCode($teamAccessCodeDTO, $this->getUser());
+        $data['team_access_code'] = $this->teamAccessCodeService->addTeamAccessCode($teamAccessCodeDTO, $this->getUser());
 
-        return new ApiResponse('Pomyślnie dodano Access code', data: true, status: Response::HTTP_CREATED);
+        return new ApiResponse('Pomyślnie dodano Access code', data: $data, status: Response::HTTP_CREATED);
     }
 }

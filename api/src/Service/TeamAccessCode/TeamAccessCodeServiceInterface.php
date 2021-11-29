@@ -7,5 +7,5 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 interface TeamAccessCodeServiceInterface
 {
-    public function addTeamAccessCode(TeamAccessCodeDataObject $dto, UserInterface $user): bool;
+    public function addTeamAccessCode(TeamAccessCodeDataObject $dto, UserInterface $user): string;
 }
