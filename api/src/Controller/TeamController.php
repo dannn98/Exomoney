@@ -101,4 +101,19 @@ class TeamController extends AbstractController
 
         return new ApiResponse('Lista członków zespołu o id ' . $teamId, data: json_decode($data), status: Response::HTTP_OK);
     }
+
+    /**
+     * Get team access code
+     *
+     * @param int $teamId
+     *
+     * @return ApiResponse
+     */
+    #[Route(path: '/{teamId}/team-access-code', name: 'team-access-code', methods: ['GET'])]
+    public function getTeamAccessCode(int $teamId): ApiResponse
+    {
+        $data['team_access_code'] = $this->teamService->getTeamAccessCode($teamId, $this->getUser());
+
+        return new ApiResponse('Kod dostępowy dla zespołu o id ' . $teamId, data: $data, status: Response::HTTP_OK);
+    }
 }

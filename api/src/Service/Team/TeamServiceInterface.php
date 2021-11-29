@@ -18,4 +18,6 @@ interface TeamServiceInterface
     public function getDebtList(int $teamId, UserInterface $user): Collection;
 
     public function getMemberList(int $teamId, UserInterface $user): Collection;
+
+    public function getTeamAccessCode(int $teamId, UserInterface $user): ?string;
 }

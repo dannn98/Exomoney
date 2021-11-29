@@ -163,4 +163,28 @@ class TeamService implements TeamServiceInterface
 
         return $team->getUsers();
     }
+
+    /**
+     * Get team access code
+     *
+     * @param int $teamId
+     * @param UserInterface $user
+     *
+     * @return string|null
+     * @throws ApiException
+     */
+    public function getTeamAccessCode(int $teamId, UserInterface $user): ?string
+    {
+        $team = $this->teamRepository->findOneBy(['id' => $teamId]);
+
+        if ($team === null) {
+            throw new ApiException('Zespół o podanym id nie istnieje', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        if ($team->getOwner() !== $user) {
+            throw new ApiException('Użytkownik nie jest właścicielem zespołu', statusCode: Response::HTTP_CONFLICT); //TODO: 403
+        }
+
+        return $team->getTeamAccessCodes()[0]->getCode();
+    }
 }
