@@ -6,7 +6,6 @@ use App\DataObject\TeamAccessCodeDataObject;
 use App\DataObject\TeamDataObject;
 use App\Http\ApiResponse;
 use App\Service\DataObject\DataObjectServiceInterface;
-use App\Service\Debt\DebtServiceInterface;
 use App\Service\Team\TeamServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +19,6 @@ class TeamController extends AbstractController
     private SerializerInterface $serializer;
     private DataObjectServiceInterface $dataObjectService;
     private TeamServiceInterface $teamService;
-    private DebtServiceInterface $debtService;
 
     /**
      * TeamController constructor
@@ -28,14 +26,12 @@ class TeamController extends AbstractController
      * @param SerializerInterface $serializer
      * @param DataObjectServiceInterface $dataObjectService
      * @param TeamServiceInterface $teamService
-     * @param DebtServiceInterface $debtService
      */
-    public function __construct(SerializerInterface $serializer, DataObjectServiceInterface $dataObjectService, TeamServiceInterface $teamService, DebtServiceInterface $debtService)
+    public function __construct(SerializerInterface $serializer, DataObjectServiceInterface $dataObjectService, TeamServiceInterface $teamService)
     {
         $this->serializer = $serializer;
         $this->dataObjectService = $dataObjectService;
         $this->teamService = $teamService;
-        $this->debtService = $debtService;
     }
 
     /**
@@ -82,10 +78,27 @@ class TeamController extends AbstractController
     #[Route(path: '/{teamId}/debts', name: 'debts', methods: ['GET'])]
     public function getDebtList(int $teamId): ApiResponse
     {
-        $debtCollection = $this->debtService->getDebtList($teamId, $this->getUser());
+        $debtCollection = $this->teamService->getDebtList($teamId, $this->getUser());
 
         $data = $this->serializer->serialize($debtCollection, 'json', ['groups' => 'Get_debt_list']);
 
-        return new ApiResponse('Lista długów dla zespołu o id ' . $teamId, data: $data, status: Response::HTTP_CREATED);
+        return new ApiResponse('Lista długów dla zespołu o id ' . $teamId, data: json_decode($data), status: Response::HTTP_OK);
+    }
+
+    /**
+     * Get member list
+     *
+     * @param int $teamId
+     *
+     * @return ApiResponse
+     */
+    #[Route(path: '/{teamId}/members', name: 'members', methods: ['GET'])]
+    public function getMemberList(int $teamId): ApiResponse
+    {
+        $memberCollection = $this->teamService->getMemberList($teamId, $this->getUser());
+
+        $data = $this->serializer->serialize($memberCollection, 'json', ['groups' => 'Get_member_list']);
+
+        return new ApiResponse('Lista członków zespołu o id ' . $teamId, data: json_decode($data), status: Response::HTTP_OK);
     }
 }

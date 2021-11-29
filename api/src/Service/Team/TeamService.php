@@ -5,12 +5,12 @@ namespace App\Service\Team;
 use App\DataObject\TeamAccessCodeDataObject;
 use App\DataObject\TeamDataObject;
 use App\Entity\Team;
-use App\Entity\TeamAccessCode;
 use App\Exception\ApiException;
 use App\FileUploader\FileUploader;
 use App\Repository\TeamAccessCodeRepository;
 use App\Repository\TeamRepository;
 use App\Service\Validator\ValidatorDTOInterface;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,9 +32,9 @@ class TeamService implements TeamServiceInterface
      * @param TeamAccessCodeRepository $teamAccessCodeRepository
      */
     public function __construct(
-        ValidatorDTOInterface $validator,
-        FileUploader $fileUploader,
-        TeamRepository $teamRepository,
+        ValidatorDTOInterface    $validator,
+        FileUploader             $fileUploader,
+        TeamRepository           $teamRepository,
         TeamAccessCodeRepository $teamAccessCodeRepository)
     {
         $this->validator = $validator;
@@ -89,7 +89,7 @@ class TeamService implements TeamServiceInterface
         try {
             $teamAccessCode = $this->teamAccessCodeRepository->findOneBy(['code' => $dto->code]);
 
-            if($teamAccessCode === null) {
+            if ($teamAccessCode === null) {
                 throw new ApiException('Podano błędny access code', statusCode: Response::HTTP_NOT_FOUND);
             }
             //TODO: Do obsłużenia
@@ -114,5 +114,53 @@ class TeamService implements TeamServiceInterface
         }
 
         return true;
+    }
+
+    /**
+     * Get debt list for team
+     *
+     * @param int $teamId
+     * @param UserInterface $user
+     *
+     * @return Collection
+     * @throws ApiException
+     */
+    public function getDebtList(int $teamId, UserInterface $user): Collection
+    {
+        $team = $this->teamRepository->findOneBy(['id' => $teamId]);
+
+        if ($team === null) {
+            throw new ApiException('Zespół o podanym id nie istnieje', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        if (!$team->getUsers()->contains($user)) {
+            throw new ApiException('Użytkownik nie należy do podanego zespołu', statusCode: Response::HTTP_NOT_FOUND);
+        }
+        //TODO: Do refaktoryzacji
+        return $team->getDebts();
+    }
+
+    /**
+     * Get member list
+     *
+     * @param int $teamId
+     * @param UserInterface $user
+     *
+     * @return Collection
+     * @throws ApiException
+     */
+    public function getMemberList(int $teamId, UserInterface $user): Collection
+    {
+        $team = $this->teamRepository->findOneBy(['id' => $teamId]);
+
+        if ($team === null) {
+            throw new ApiException('Zespół o podanym id nie istnieje', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        if (!$team->getUsers()->contains($user)) {
+            throw new ApiException('Użytkownik nie należy do podanego zespołu', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        return $team->getUsers();
     }
 }
