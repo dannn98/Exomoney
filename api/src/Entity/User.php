@@ -28,19 +28,19 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['Get_debt_list'])]
+    #[Groups(['Get_debt_list', 'Get_member_list'])]
     private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    #[Groups(['Get_debt_list'])]
+    #[Groups(['Get_debt_list', 'Get_member_list'])]
     private ?string $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['Get_debt_list'])]
+    #[Groups(['Get_debt_list', 'Get_member_list'])]
     private $nickname;
 
     /**
@@ -54,7 +54,7 @@ class User implements UserInterface
     private ?string $password;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Team::class, inversedBy="users")
+     * @ORM\ManyToMany(targetEntity=Team::class, inversedBy="users", fetch="EAGER")
      */
     private $teams;
 

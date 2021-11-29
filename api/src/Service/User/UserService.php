@@ -6,11 +6,12 @@ use App\DataObject\UserDataObject;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Repository\UserRepository;
-use App\Service\Validator\ValidatorDTO;
 use App\Service\Validator\ValidatorDTOInterface;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserService implements UserServiceInterface
 {
@@ -26,7 +27,7 @@ class UserService implements UserServiceInterface
      * @param UserRepository $userRepository
      */
     public function __construct(
-        ValidatorDTOInterface $validator,
+        ValidatorDTOInterface        $validator,
         UserPasswordEncoderInterface $authenticatedUser,
         UserRepository               $userRepository
     )
@@ -59,5 +60,17 @@ class UserService implements UserServiceInterface
         }
 
         return true;
+    }
+
+    /**
+     * Get team list
+     *
+     * @param UserInterface $user
+     * @return Collection
+     */
+    public function getTeamList(UserInterface $user): Collection
+    {
+        /**@var User $user */
+        return $user->getTeams();
     }
 }
