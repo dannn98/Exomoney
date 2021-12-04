@@ -32,9 +32,9 @@ class TeamService implements TeamServiceInterface
      * @param TeamAccessCodeRepository $teamAccessCodeRepository
      */
     public function __construct(
-        ValidatorDTOInterface    $validator,
-        FileUploader             $fileUploader,
-        TeamRepository           $teamRepository,
+        ValidatorDTOInterface $validator,
+        FileUploader $fileUploader,
+        TeamRepository $teamRepository,
         TeamAccessCodeRepository $teamAccessCodeRepository)
     {
         $this->validator = $validator;
@@ -185,6 +185,6 @@ class TeamService implements TeamServiceInterface
             throw new ApiException('Użytkownik nie jest właścicielem zespołu', statusCode: Response::HTTP_CONFLICT); //TODO: 403
         }
 
-        return $team->getTeamAccessCodes()[0]->getCode();
+        return $team->getTeamAccessCodes()[0] ? $team->getTeamAccessCodes()[0]->getCode() : null;
     }
 }

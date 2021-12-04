@@ -38,21 +38,21 @@ class Debt
     private $team;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="debts")
+     * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
     #[Groups(['Get_debt_list'])]
     private $debtor;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="credits")
+     * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
     #[Groups(['Get_debt_list'])]
     private $creditor;
 
     /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="decimal", precision=10, scale=2)
      */
     #[Groups(['Get_debt_list'])]
     private $value;
@@ -110,12 +110,12 @@ class Debt
         return $this;
     }
 
-    public function getValue(): ?float
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue(float $value): self
+    public function setValue(?string $value): self
     {
         $this->value = $value;
 
