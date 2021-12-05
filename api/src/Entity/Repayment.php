@@ -6,6 +6,7 @@ use App\Repository\RepaymentRepository;
 use App\Traits\CreatedAt;
 use App\Traits\ModifiedAt;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=RepaymentRepository::class)
@@ -25,21 +26,24 @@ class Repayment
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="debts")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="debtsFromRepayments")
      * @ORM\JoinColumn(nullable=false)
      */
+    #[Groups(['Get_repayment_list'])]
     private $debtor;
 
     /**
      * @ORM\Id
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="credits")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="creditsFromRepayments")
      * @ORM\JoinColumn(nullable=false)
      */
+    #[Groups(['Get_repayment_list'])]
     private $creditor;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
      */
+    #[Groups(['Get_repayment_list'])]
     private $value;
 
     public function getDebtor(): ?User

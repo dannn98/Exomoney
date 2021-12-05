@@ -27,9 +27,9 @@ class UserService implements UserServiceInterface
      * @param UserRepository $userRepository
      */
     public function __construct(
-        ValidatorDTOInterface        $validator,
+        ValidatorDTOInterface $validator,
         UserPasswordEncoderInterface $authenticatedUser,
-        UserRepository               $userRepository
+        UserRepository $userRepository
     )
     {
         $this->validator = $validator;
@@ -41,6 +41,7 @@ class UserService implements UserServiceInterface
      * Create User
      *
      * @param UserDataObject $dto
+     *
      * @return bool
      * @throws ApiException
      */
@@ -66,11 +67,26 @@ class UserService implements UserServiceInterface
      * Get team list
      *
      * @param UserInterface $user
+     *
      * @return Collection
      */
     public function getTeamList(UserInterface $user): Collection
     {
-        /**@var User $user */
+        /** @var User $user */
         return $user->getTeams();
+    }
+
+    /**
+     * @param int $teamId
+     * @param UserInterface $user
+     *
+     * @return array
+     */
+    public function getRepaymentList(int $teamId, UserInterface $user): array
+    {
+        /** @var User $user */
+        $array['debts'] = $user->getDebtsFromRepayments();
+        $array['credits'] = $user->getCreditsFromRepayments();
+        return $array;
     }
 }

@@ -27,9 +27,9 @@ class UserController extends AbstractController
      * @param UserServiceInterface $userService
      */
     public function __construct(
-        SerializerInterface        $serializer,
+        SerializerInterface $serializer,
         DataObjectServiceInterface $dataObjectService,
-        UserServiceInterface       $userService
+        UserServiceInterface $userService
     )
     {
         $this->serializer = $serializer;
@@ -67,5 +67,22 @@ class UserController extends AbstractController
         $data = $this->serializer->serialize($teamCollection, 'json', ['groups' => 'Get_team_list']);
 
         return new ApiResponse('Lista zespołów do których należy użytkownik', data: json_decode($data), status: Response::HTTP_OK);
+    }
+
+    /**ół
+     * Get repayment list
+     *
+     * @param int $teamId
+     *
+     * @return ApiResponse
+     */
+    #[Route(path: '/team/{teamId}/repayment', name: 'repayment.debts', methods: ['GET'])]
+    public function getRepaymentList(int $teamId): ApiResponse
+    {
+        $repaymentCollection = $this->userService->getRepaymentList($teamId, $this->getUser());
+
+        $data = $this->serializer->serialize($repaymentCollection, 'json', ['groups' => 'Get_repayment_list']);
+
+        return new ApiResponse('Lista zesumowanych długów użytkownika', data: json_decode($data), status: Response::HTTP_OK);
     }
 }

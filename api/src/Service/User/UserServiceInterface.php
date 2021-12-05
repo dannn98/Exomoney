@@ -11,4 +11,6 @@ interface UserServiceInterface
     public function createUser(UserDataObject $dto): bool;
 
     public function getTeamList(UserInterface $user): Collection;
+
+    public function getRepaymentList(int $teamId, UserInterface $user): array;
 }
