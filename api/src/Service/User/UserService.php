@@ -8,8 +8,10 @@ use App\Exception\ApiException;
 use App\Repository\UserRepository;
 use App\Service\Validator\ValidatorDTOInterface;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -57,7 +59,13 @@ class UserService implements UserServiceInterface
         try {
             $this->userRepository->save($user);
         } catch (OptimisticLockException | ORMException $e) {
-            //TODO: Sprawdzić czy się duplikuje
+
+        } catch (UniqueConstraintViolationException $e) {
+            throw new ApiException(
+                message: 'Validation exception',
+                data: ['email' => ['Użytkownik o podanym adresie email już istnieje']],
+                statusCode: Response::HTTP_UNPROCESSABLE_ENTITY
+            );
         }
 
         return true;

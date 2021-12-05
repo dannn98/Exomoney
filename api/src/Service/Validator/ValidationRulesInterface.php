@@ -12,4 +12,6 @@ interface ValidationRulesInterface
 
     const AVATAR_WIDTH = 128;
     const AVATAR_HEIGHT = 128;
+
+    const ACCESS_CODE_LENGTH = 12;
 }

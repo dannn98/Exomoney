@@ -20,16 +20,6 @@ class RepaymentService implements RepaymentServiceInterface
         // TODO: Implement subtractFromRepayment() method.
     }
 
-    public function getRepaymentsAsDebtor(UserInterface $user)
-    {
-        // TODO: Implement getRepaymentsAsDebtor() method.
-    }
-
-    public function getRepaymentsAsCreditor(UserInterface $user)
-    {
-        // TODO: Implement getRepaymentsAsCreditor() method.
-    }
-
     public function optimiseRepayments()
     {
         // TODO: Implement optimiseRepayments() method.

@@ -95,7 +95,7 @@ class DebtService implements DebtServiceInterface
             }
 
             if ($debtor === $user) {
-                throw new ApiException('Użytkownik (kredytodawca) nie może być kredytobiorcą', statusCode: Response::HTTP_CONFLICT);
+                throw new ApiException('Użytkownik (kredytodawca) nie może być kredytobiorcą', statusCode: Response::HTTP_BAD_REQUEST);
             }
 
             $debt = new Debt();

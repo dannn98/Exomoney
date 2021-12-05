@@ -136,7 +136,7 @@ class TeamService implements TeamServiceInterface
         if (!$team->getUsers()->contains($user)) {
             throw new ApiException('Użytkownik nie należy do podanego zespołu', statusCode: Response::HTTP_NOT_FOUND);
         }
-        //TODO: Do refaktoryzacji
+
         return $team->getDebts();
     }
 
@@ -182,7 +182,7 @@ class TeamService implements TeamServiceInterface
         }
 
         if ($team->getOwner() !== $user) {
-            throw new ApiException('Użytkownik nie jest właścicielem zespołu', statusCode: Response::HTTP_CONFLICT); //TODO: 403
+            throw new ApiException('Użytkownik nie jest właścicielem zespołu', statusCode: Response::HTTP_FORBIDDEN);
         }
 
         return $team->getTeamAccessCodes()[0] ? $team->getTeamAccessCodes()[0]->getCode() : null;
