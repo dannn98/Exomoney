@@ -19,8 +19,14 @@ class DefaultController extends AbstractController
     #[Route(name: 'default', methods: ['GET'])]
     public function index(): JsonResponse
     {
-        $x = new FixturesService();
-        $x->generate();
-        return new ApiResponse('Siema', errors: ['siema' => ['elo']]);
+//        $x = new FixturesService();
+//        $x->generate();
+//        return new ApiResponse('Siema', errors: ['siema' => ['elo']]);
+
+        $val1 = strval(10.09);
+        $val2 = "5.01";
+        dd(bcadd($val1, $val2, 2));
+
+        return new ApiResponse('Wszystko ok');
     }
 }

@@ -18,6 +18,11 @@ class Repayment
     use ModifiedAt;
 
     /**
+     * @ORM\Column(type="string", nullable=false, unique=true)
+     */
+    private $uid;
+
+    /**
      * @ORM\Id
      * @ORM\ManyToOne(targetEntity=Team::class)
      * @ORM\JoinColumn(nullable=false)
@@ -45,6 +50,19 @@ class Repayment
      */
     #[Groups(['Get_repayment_list'])]
     private $value;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function setId(): void
+    {
+        $this->uid = uniqid();
+    }
 
     public function getDebtor(): ?User
     {

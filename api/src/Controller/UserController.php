@@ -69,14 +69,14 @@ class UserController extends AbstractController
         return new ApiResponse('Lista zespołów do których należy użytkownik', data: json_decode($data), status: Response::HTTP_OK);
     }
 
-    /**ół
+    /**
      * Get repayment list
      *
      * @param int $teamId
      *
      * @return ApiResponse
      */
-    #[Route(path: '/team/{teamId}/repayment', name: 'repayment.debts', methods: ['GET'])]
+    #[Route(path: '/team/{teamId}/repayments', name: 'repayments', methods: ['GET'])]
     public function getRepaymentList(int $teamId): ApiResponse
     {
         $repaymentCollection = $this->userService->getRepaymentList($teamId, $this->getUser());
