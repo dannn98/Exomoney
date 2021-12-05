@@ -83,6 +83,6 @@ class UserController extends AbstractController
 
         $data = $this->serializer->serialize($repaymentCollection, 'json', ['groups' => 'Get_repayment_list']);
 
-        return new ApiResponse('Lista zesumowanych długów użytkownika', data: json_decode($data), status: Response::HTTP_OK);
+        return new ApiResponse('Lista zesumowanych spłat użytkownika', data: json_decode($data), status: Response::HTTP_OK);
     }
 }
