@@ -107,9 +107,10 @@ class DebtService implements DebtServiceInterface
 
             $repayment = null;
 
-            foreach ($repayments as $element) {
+            foreach ($repayments as $i => $element) {
                 if ($element->getDebtor() === $debtor) {
                     $repayment = $element;
+                    unset($repayments[$i]);
                     break;
                 }
             }
@@ -119,11 +120,10 @@ class DebtService implements DebtServiceInterface
                 $repayment->setTeam($team);
                 $repayment->setDebtor($debtor);
                 $repayment->setCreditor($user);
-            }
-
-            $repayment->getValue() ?
-                $repayment->setValue(bcadd($repayment->getValue(), $dto->debts[$debtor->getId()], 2)) :
                 $repayment->setValue($dto->debts[$debtor->getId()]);
+            } else {
+                $repayment->setValue(bcadd($repayment->getValue(), $dto->debts[$debtor->getId()], 2));
+            }
 
             $debtCollection[] = $debt;
             $repaymentCollection[] = $repayment;
