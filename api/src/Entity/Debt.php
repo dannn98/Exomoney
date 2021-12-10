@@ -23,7 +23,7 @@ class Debt
      * @ORM\Column(type="integer")
      */
     #[Groups(['Get_debt_list'])]
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=255)

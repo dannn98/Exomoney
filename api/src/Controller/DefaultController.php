@@ -13,19 +13,23 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route(path: '/default', name: 'default.')]
 class DefaultController extends AbstractController
 {
+    private FixturesService $fs;
+
+    /**
+     * @param FixturesService $fs
+     */
+    public function __construct(FixturesService $fs)
+    {
+        $this->fs = $fs;
+    }
+
     /**
      * @return JsonResponse
      */
     #[Route(name: 'default', methods: ['GET'])]
     public function index(): JsonResponse
     {
-//        $x = new FixturesService();
-//        $x->generate();
-//        return new ApiResponse('Siema', errors: ['siema' => ['elo']]);
-
-        $val1 = strval(10.09);
-        $val2 = "5.01";
-        dd(bcadd($val1, $val2, 2));
+        $this->fs->generate();
 
         return new ApiResponse('Wszystko ok');
     }

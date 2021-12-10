@@ -36,6 +36,17 @@ class UserRepository extends ServiceEntityRepository implements UserProviderInte
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @throws ORMException
+     */
+    public function saveCollection(array $userCollection)
+    {
+        foreach ($userCollection as $user) {
+            $this->getEntityManager()->persist($user);
+        }
+        $this->getEntityManager()->flush();
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

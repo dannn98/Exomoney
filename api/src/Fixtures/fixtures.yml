@@ -8,15 +8,25 @@ App\Entity\Team:
 App\Entity\User:
   user_0:
     email: 'owner@gmail.com'
+    nickname: 'Owner'
     password: 'Trudnehaslo_1'
 
   user_{1..49}:
     email (unique): '<email()>'
+    nickname: '<name()>'
     password: '<password()>'
 
 App\Entity\Debt:
-  debt_{1..500}:
+  debt_{1..250}:
+    title: 'Jakiś tytuł'
     team: '@team'
-    debtor: '@user_*'
-    creditor: '@user_*'
+    debtor: '@user_<numberBetween(0, 24)>'
+    creditor: '@user_<numberBetween(25, 49)>'
+    value: '<(mt_rand(1, 10000)/100)>'
+
+  debt_{256..500}:
+    title: 'Jakiś tytuł'
+    team: '@team'
+    debtor: '@user_<numberBetween(25, 49)>'
+    creditor: '@user_<numberBetween(0, 24)>'
     value: '<(mt_rand(1, 10000)/100)>'

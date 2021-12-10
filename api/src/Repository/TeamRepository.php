@@ -31,6 +31,17 @@ class TeamRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    /**
+     * @throws ORMException
+     */
+    public function saveCollection(array $teamCollection)
+    {
+        foreach ($teamCollection as $team) {
+            $this->getEntityManager()->persist($team);
+        }
+        $this->getEntityManager()->flush();
+    }
+
     // /**
     //  * @return Team[] Returns an array of Team objects
     //  */
