@@ -95,6 +95,19 @@ class UserService implements UserServiceInterface
         /** @var User $user */
         $array['debts'] = $user->getDebtsFromRepayments();
         $array['credits'] = $user->getCreditsFromRepayments();
+
+        foreach ($array['debts'] as $i => $repayment) {
+            if($repayment->getValue() === '0.00') {
+                unset($array['debts'][$i]);
+            }
+        }
+
+        foreach ($array['credits'] as $i => $repayment) {
+            if($repayment->getValue() === '0.00') {
+                unset($array['credits'][$i]);
+            }
+        }
+
         return $array;
     }
 }

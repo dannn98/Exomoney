@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Repayment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -18,6 +19,16 @@ class RepaymentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Repayment::class);
+    }
+
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     */
+    public function save(Repayment $repayment)
+    {
+        $this->getEntityManager()->persist($repayment);
+        $this->getEntityManager()->flush();
     }
 
     /**
