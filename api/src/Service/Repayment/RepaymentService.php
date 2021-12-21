@@ -7,6 +7,8 @@ namespace App\Service\Repayment;
 use App\DataObject\DataObjectAbstract;
 use App\DataObject\RepaymentDataObject;
 use App\Entity\Debt;
+use App\Entity\Repayment;
+use App\Entity\Team;
 use App\Exception\ApiException;
 use App\Repository\RepaymentRepository;
 use App\Service\Validator\ValidatorDTOInterface;
@@ -73,8 +75,57 @@ class RepaymentService implements RepaymentServiceInterface
         return true;
     }
 
-    public function optimiseRepayments(): void
+    public function optimiseRepayments(Team $team): void
     {
-        // TODO: Implement optimiseRepayments() method.
+        $users = array();
+        $netChange = array();
+        $givers = array();
+        $receivers = array();
+
+        $oldRepayments = $this->repaymentRepository->getRepaymentsFromTeam($team);
+        if($oldRepayments === null) {
+            return;
+        }
+
+        /** @var Repayment $repayment */
+        foreach ($oldRepayments as $repayment) {
+            $users[$repayment->getDebtor()->getId()] = $repayment->getDebtor();
+            $users[$repayment->getCreditor()->getId()] = $repayment->getCreditor();
+        }
+
+        foreach ($users as $user) {
+            $netChange[$user->getId()] = '0.00';
+
+            /** @var Repayment $repayment */
+            foreach ($oldRepayments as $repayment) {
+                if ($repayment->getDebtor()->getId() === $user->getId()) {
+                    $netChange[$user->getId()] = bcsub($netChange[$user->getId()], $repayment->getValue(), 2);
+                    continue;
+                }
+                if ($repayment->getCreditor()->getId() === $user->getId()) {
+                    $netChange[$user->getId()] = bcadd($netChange[$user->getId()], $repayment->getValue(), 2);
+                }
+            }
+        }
+
+        asort($netChange);
+
+        foreach ($netChange as $key => $value) {
+            if($value < '0.00') {
+                $givers[$key] = $value;
+                continue;
+            }
+
+            if($value > '0.00') {
+                $receivers[$key] = $value;
+            }
+        }
+
+
+
+        dd([
+            'g' => $givers,
+            'r' => $receivers
+        ]);
     }
 }

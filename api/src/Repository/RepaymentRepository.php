@@ -3,9 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Repayment;
+use App\Entity\Team;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,6 +43,22 @@ class RepaymentRepository extends ServiceEntityRepository
             $this->getEntityManager()->persist($debt);
         }
         $this->getEntityManager()->flush();
+    }
+
+    public function getRepaymentsFromTeam(Team $team): ?array
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb
+            ->select()
+            ->from(Repayment::class, 'r')
+            ->leftJoin('r.debtor', 'd')
+            ->leftJoin('r.creditor', 'c')
+            ->where('r.team = :team')
+            ->setParameter('team', $team);
+
+        $query = $qb->getQuery();
+
+        return $query->getResult();
     }
 
     // /**

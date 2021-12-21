@@ -9,6 +9,8 @@ use App\Http\ApiResponse;
 use App\Repository\RepaymentRepository;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
+use App\Service\Repayment\RepaymentServiceInterface;
+use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,24 +23,28 @@ class DefaultController extends AbstractController
     private UserRepository $userRepository;
     private TeamRepository $teamRepository;
     private RepaymentRepository $repaymentRepository;
+    private RepaymentServiceInterface $repaymentService;
 
     /**
      * @param FixturesService $fs
      * @param UserRepository $userRepository
      * @param TeamRepository $teamRepository
      * @param RepaymentRepository $repaymentRepository
+     * @param RepaymentServiceInterface $repaymentService
      */
     public function __construct(
         FixturesService $fs,
         UserRepository $userRepository,
         TeamRepository $teamRepository,
-        RepaymentRepository $repaymentRepository
+        RepaymentRepository $repaymentRepository,
+        RepaymentServiceInterface $repaymentService
     )
     {
         $this->fs = $fs;
         $this->userRepository = $userRepository;
         $this->teamRepository = $teamRepository;
         $this->repaymentRepository = $repaymentRepository;
+        $this->repaymentService = $repaymentService;
     }
 
 
@@ -55,6 +61,7 @@ class DefaultController extends AbstractController
 
     /**
      * @return JsonResponse
+     * @throws ORMException
      */
     #[Route(path: '/insert', name: 'insert', methods: ['GET'])]
     public function insert(): JsonResponse
@@ -85,10 +92,19 @@ class DefaultController extends AbstractController
         $repayment = new Repayment();
         $repayments[] = $repayment->setTeam($team)->setDebtor($users['Charlie'])->setCreditor($users['David'])->setValue(20);
         $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['David'])->setCreditor($users['Ema'])->setValue(55);
+        $repayments[] = $repayment->setTeam($team)->setDebtor($users['David'])->setCreditor($users['Ema'])->setValue(50);
 
         $this->repaymentRepository->saveCollection($repayments);
 
         return new ApiResponse('Dodane');
+    }
+
+    #[Route(path: '/optimise', name: 'optimise', methods: ['GET'])]
+    public function optimise(): ApiResponse
+    {
+        $team = $this->teamRepository->find(12);
+        $this->repaymentService->optimiseRepayments($team);
+
+        return new ApiResponse('');
     }
 }
