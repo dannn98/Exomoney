@@ -30,11 +30,6 @@ class RepaymentService implements RepaymentServiceInterface
         $this->repaymentRepository = $repaymentRepository;
     }
 
-    public function addToRepayment(Debt $debt)
-    {
-        // TODO: Implement addToRepayment() method.
-    }
-
     /**
      * @param RepaymentDataObject $repaymentDTO
      * @param UserInterface $user
