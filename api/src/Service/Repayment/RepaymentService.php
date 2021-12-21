@@ -73,7 +73,7 @@ class RepaymentService implements RepaymentServiceInterface
         return true;
     }
 
-    public function optimiseRepayments()
+    public function optimiseRepayments(): void
     {
         // TODO: Implement optimiseRepayments() method.
     }
