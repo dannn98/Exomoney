@@ -9,11 +9,13 @@ use App\DataObject\RepaymentDataObject;
 use App\Entity\Debt;
 use App\Entity\Repayment;
 use App\Entity\Team;
+use App\EntityManager\Transaction;
 use App\Exception\ApiException;
 use App\Repository\RepaymentRepository;
 use App\Service\Validator\ValidatorDTOInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -75,18 +77,23 @@ class RepaymentService implements RepaymentServiceInterface
         return true;
     }
 
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     */
     public function optimiseRepayments(Team $team): void
     {
         $users = array();
         $netChange = array();
-        $givers = array();
-        $receivers = array();
+        $newRepayments = array();
 
+        //Pobranie danych z bazy
         $oldRepayments = $this->repaymentRepository->getRepaymentsFromTeam($team);
         if($oldRepayments === null) {
             return;
         }
 
+        //Przygotowanie danych
         /** @var Repayment $repayment */
         foreach ($oldRepayments as $repayment) {
             $users[$repayment->getDebtor()->getId()] = $repayment->getDebtor();
@@ -108,24 +115,72 @@ class RepaymentService implements RepaymentServiceInterface
             }
         }
 
-        asort($netChange);
+        $netChange = array_filter($netChange, fn ($value) => $value !== '0.00');
 
-        foreach ($netChange as $key => $value) {
-            if($value < '0.00') {
-                $givers[$key] = $value;
-                continue;
+        //Algorytm
+        while(true) {
+            asort($netChange);
+            $repayment = new Repayment();
+            $repayment->setTeam($team);
+
+            foreach ($netChange as $key1 => $value1) {
+                foreach ($netChange as $key2 => $value2) {
+                    if($key1 === $key2) {
+                        continue;
+                    }
+//                    dump($value1.' '.$value2);
+                    if(bcmul($value1, '-1', 2) === $value2) {
+                        $newRepayments[] = $repayment
+                            ->setDebtor($users[$key1])
+                            ->setCreditor($users[$key2])
+                            ->setValue($value2);
+                        unset($netChange[$key1]);
+                        unset($netChange[$key2]);
+                        break;
+                    }
+                }
             }
 
-            if($value > '0.00') {
-                $receivers[$key] = $value;
+            if (empty($netChange)) {
+                break;
+            }
+
+            switch (bccomp(bcmul(array_values($netChange)[0],'-1', 2), end($netChange), 2)) {
+                case 1:
+                    $newRepayments[] = $repayment
+                        ->setDebtor($users[array_key_first($netChange)])
+                        ->setCreditor($users[array_key_last($netChange)])
+                        ->setValue(end($netChange));
+                    $netChange[array_key_first($netChange)] = bcadd(array_values($netChange)[0], end($netChange), 2);
+                    unset($netChange[array_key_last($netChange)]);
+                    break;
+                case 0:
+                    $newRepayments[] = $repayment
+                        ->setDebtor($users[array_key_first($netChange)])
+                        ->setCreditor($users[array_key_last($netChange)])
+                        ->setValue(end($netChange));
+                    unset($netChange[array_key_first($netChange)]);
+                    unset($netChange[array_key_last($netChange)]);
+                    break;
+                case -1:
+                    $newRepayments[] = $repayment
+                        ->setDebtor($users[array_key_first($netChange)])
+                        ->setCreditor($users[array_key_last($netChange)])
+                        ->setValue(bcmul(array_values($netChange)[0],'-1', 2));
+                    $netChange[array_key_last($netChange)] = bcadd(array_values($netChange)[0], end($netChange), 2);
+                    unset($netChange[array_key_first($netChange)]);
+                    break;
             }
         }
 
-
-
-        dd([
-            'g' => $givers,
-            'r' => $receivers
-        ]);
+        try {
+            Transaction::beginTransaction();
+            $this->repaymentRepository->removeCollection($oldRepayments);
+            $this->repaymentRepository->saveCollection($newRepayments);
+            Transaction::commit();
+        } catch (OptimisticLockException | ORMException | Exception $e) {
+            Transaction::rollback();
+            throw $e;
+        }
     }
 }

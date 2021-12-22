@@ -37,10 +37,22 @@ class RepaymentRepository extends ServiceEntityRepository
     /**
      * @throws ORMException
      */
-    public function saveCollection(array $debtCollection)
+    public function saveCollection(array $repaymentCollection)
     {
-        foreach ($debtCollection as $debt) {
-            $this->getEntityManager()->persist($debt);
+        foreach ($repaymentCollection as $repayment) {
+            $this->getEntityManager()->persist($repayment);
+        }
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     */
+    public function removeCollection(array $repaymentCollection)
+    {
+        foreach ($repaymentCollection as $repayment) {
+            $this->getEntityManager()->remove($repayment);
         }
         $this->getEntityManager()->flush();
     }

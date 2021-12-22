@@ -16,17 +16,25 @@ App\Entity\User:
     nickname: '<name()>'
     password: '<password()>'
 
-App\Entity\Debt:
-  debt_{1..250}:
-    title: 'Jakiś tytuł'
+App\Entity\Repayment:
+  repayment_{0..24}:
     team: '@team'
-    debtor: '@user_<numberBetween(0, 24)>'
-    creditor: '@user_<numberBetween(25, 49)>'
+    debtor: '@user_*'
+    creditor: '@user_*'
     value: '<(mt_rand(1, 10000)/100)>'
 
-  debt_{256..500}:
-    title: 'Jakiś tytuł'
-    team: '@team'
-    debtor: '@user_<numberBetween(25, 49)>'
-    creditor: '@user_<numberBetween(0, 24)>'
-    value: '<(mt_rand(1, 10000)/100)>'
+
+#App\Entity\Debt:
+#  debt_{1..250}:
+#    title: 'Jakiś tytuł'
+#    team: '@team'
+#    debtor: '@user_<numberBetween(0, 24)>'
+#    creditor: '@user_<numberBetween(25, 49)>'
+#    value: '<(mt_rand(1, 10000)/100)>'
+#
+#  debt_{256..500}:
+#    title: 'Jakiś tytuł'
+#    team: '@team'
+#    debtor: '@user_<numberBetween(25, 49)>'
+#    creditor: '@user_<numberBetween(0, 24)>'
+#    value: '<(mt_rand(1, 10000)/100)>'
