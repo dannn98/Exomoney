@@ -57,6 +57,12 @@ class DataGenerator
             case 2:
                 $leans = $this->easyCase();
                 break;
+            case 3:
+                $leans = $this->hardCase();
+                break;
+            case 4:
+                $leans = $this->sameCase();
+                break;
             default:
                 return false;
         }
@@ -97,6 +103,18 @@ class DataGenerator
         $leans[] = ['d' => '22', 'c' => '25', 'v' => '40.00'];
         $leans[] = ['d' => '25', 'c' => '23', 'v' => '20.00'];
         $leans[] = ['d' => '23', 'c' => '26', 'v' => '50.00'];
+        return $leans;
+    }
+
+    private function hardCase(): array
+    {
+        $leans[] = ['d' => '', 'c' => '', 'v' => ''];
+        return $leans;
+    }
+
+    private function sameCase(): array
+    {
+        $leans[] = ['d' => '', 'c' => '', 'v' => ''];
         return $leans;
     }
 }
