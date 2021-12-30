@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Repayment;
 use App\Exception\ApiException;
+use App\Fixtures\DataGenerator\DataGenerator;
 use App\Fixtures\FixturesService;
 use App\Http\ApiResponse;
 use App\Repository\RepaymentRepository;
@@ -24,6 +24,7 @@ class DefaultController extends AbstractController
     private TeamRepository $teamRepository;
     private RepaymentRepository $repaymentRepository;
     private RepaymentServiceInterface $repaymentService;
+    private DataGenerator $dataGenerator;
 
     /**
      * @param FixturesService $fs
@@ -31,13 +32,15 @@ class DefaultController extends AbstractController
      * @param TeamRepository $teamRepository
      * @param RepaymentRepository $repaymentRepository
      * @param RepaymentServiceInterface $repaymentService
+     * @param DataGenerator $dataGenerator
      */
     public function __construct(
         FixturesService $fs,
         UserRepository $userRepository,
         TeamRepository $teamRepository,
         RepaymentRepository $repaymentRepository,
-        RepaymentServiceInterface $repaymentService
+        RepaymentServiceInterface $repaymentService,
+        DataGenerator $dataGenerator
     )
     {
         $this->fs = $fs;
@@ -45,6 +48,7 @@ class DefaultController extends AbstractController
         $this->teamRepository = $teamRepository;
         $this->repaymentRepository = $repaymentRepository;
         $this->repaymentService = $repaymentService;
+        $this->dataGenerator = $dataGenerator;
     }
 
 
@@ -60,51 +64,36 @@ class DefaultController extends AbstractController
     }
 
     /**
+     * @param int $num
+     *
      * @return JsonResponse
      * @throws ORMException
+     * @throws ApiException
      */
-    #[Route(path: '/insert', name: 'insert', methods: ['GET'])]
-    public function insert(): JsonResponse
+    #[Route(path: '/insert/{num}', name: 'insert', methods: ['GET'])]
+    public function insert(int $num): JsonResponse
     {
-        $team = $this->teamRepository->find(12);
-        $res = $this->userRepository->findBy(['nickname' => ['Gabe', 'Bob', 'David', 'Fred', 'Charlie', 'Ema']]);
-        $users = array();
-        foreach ($res as $user) {
-            $users[$user->getNickname()] = $user;
+        if (!$this->dataGenerator->insert($num)) {
+            throw new ApiException('Nie ma case\'u o podanym numerze', statusCode: Response::HTTP_NOT_FOUND);
         }
-
-        $repayments = array();
-
-        $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['Gabe'])->setCreditor($users['Bob'])->setValue(30);
-        $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['Gabe'])->setCreditor($users['David'])->setValue(10);
-        $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['Fred'])->setCreditor($users['Bob'])->setValue(10);
-        $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['Fred'])->setCreditor($users['Charlie'])->setValue(30);
-        $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['Fred'])->setCreditor($users['David'])->setValue(10);
-        $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['Fred'])->setCreditor($users['Ema'])->setValue(10);
-        $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['Bob'])->setCreditor($users['Charlie'])->setValue(40);
-        $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['Charlie'])->setCreditor($users['David'])->setValue(20);
-        $repayment = new Repayment();
-        $repayments[] = $repayment->setTeam($team)->setDebtor($users['David'])->setCreditor($users['Ema'])->setValue(50);
-
-        $this->repaymentRepository->saveCollection($repayments);
-
-        return new ApiResponse('Dodane');
+        return new ApiResponse('ok');
     }
 
     #[Route(path: '/optimise', name: 'optimise', methods: ['GET'])]
     public function optimise(): ApiResponse
     {
-        $team = $this->teamRepository->find(78);
+        $team = $this->teamRepository->find(12);
         $this->repaymentService->optimiseRepayments($team);
 
-        return new ApiResponse('');
+        return new ApiResponse('ok');
+    }
+
+    #[Route(path: '/delete', name: 'delete', methods: ['DELETE'])]
+    public function delete(): ApiResponse
+    {
+        $team = $this->teamRepository->find(12);
+        $this->repaymentRepository->removeAllFromTeam($team);
+
+        return new ApiResponse('ok');
     }
 }

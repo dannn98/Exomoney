@@ -57,6 +57,17 @@ class RepaymentRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
+    public function removeAllFromTeam(Team $team)
+    {
+        $qb = $this->createQueryBuilder('delete');
+        $qb
+            ->delete(Repayment::class, 'r')
+            ->where('r.team = :team')
+            ->setParameter('team', $team);
+
+        $qb->getQuery()->execute();
+    }
+
     public function getRepaymentsFromTeam(Team $team): ?array
     {
         $qb = $this->createQueryBuilder('p');

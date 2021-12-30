@@ -4,9 +4,7 @@
 namespace App\Service\Repayment;
 
 
-use App\DataObject\DataObjectAbstract;
 use App\DataObject\RepaymentDataObject;
-use App\Entity\Debt;
 use App\Entity\Repayment;
 use App\Entity\Team;
 use App\EntityManager\Transaction;
@@ -47,24 +45,23 @@ class RepaymentService implements RepaymentServiceInterface
 
         $repayment = $this->repaymentRepository->findOneBy(['uid' => $repaymentDTO->uid]);
 
-        if($repayment === null) {
+        if ($repayment === null) {
             throw new ApiException('Należność o podanym uid nie istnieje', statusCode: Response::HTTP_NOT_FOUND);
         }
 
-        if(!in_array($user, [$repayment->getCreditor(), $repayment->getDebtor()])) {
+        if (!in_array($user, [$repayment->getCreditor(), $repayment->getDebtor()])) {
             throw new ApiException('Należność nie jest powiązana z użytkownikiem', statusCode: Response::HTTP_FORBIDDEN);
         }
 
-        if($repayment->getValue() === null) {
+        if ($repayment->getValue() === null) {
             throw new ApiException('Należność o podanym uid nie istnieje', statusCode: Response::HTTP_NOT_FOUND);
         }
 
         //TODO: Jeżeli użytkownik prześle więcej niż jest winien
         $res = bcsub($repayment->getValue(), number_format($repaymentDTO->value, 2), 2);
-        if($res[0] === '-') {
+        if ($res[0] === '-') {
             $repayment->setValue('0.00');
-        }
-        else {
+        } else {
             $repayment->setValue($res);
         }
 
@@ -89,7 +86,7 @@ class RepaymentService implements RepaymentServiceInterface
 
         //Pobranie danych z bazy
         $oldRepayments = $this->repaymentRepository->getRepaymentsFromTeam($team);
-        if($oldRepayments === null) {
+        if ($oldRepayments === null) {
             return;
         }
 
@@ -115,22 +112,23 @@ class RepaymentService implements RepaymentServiceInterface
             }
         }
 
-        $netChange = array_filter($netChange, fn ($value) => $value !== '0.00');
+        $netChange = array_filter($netChange, fn($value) => $value !== '0.00');
 
         //Algorytm
-        while(true) {
+        while (true) {
             asort($netChange);
             $repayment = new Repayment();
             $repayment->setTeam($team);
 
             foreach ($netChange as $key1 => $value1) {
                 foreach ($netChange as $key2 => $value2) {
-                    if($key1 === $key2) {
+                    if ($key1 === $key2) {
                         continue;
                     }
-//                    dump($value1.' '.$value2);
-                    if(bcmul($value1, '-1', 2) === $value2) {
-                        $newRepayments[] = $repayment
+                    if (bcmul($value1, '-1', 2) === $value2) {
+                        $repayment2 = new Repayment();
+                        $repayment2->setTeam($team);
+                        $newRepayments[] = $repayment2
                             ->setDebtor($users[$key1])
                             ->setCreditor($users[$key2])
                             ->setValue($value2);
@@ -145,7 +143,7 @@ class RepaymentService implements RepaymentServiceInterface
                 break;
             }
 
-            switch (bccomp(bcmul(array_values($netChange)[0],'-1', 2), end($netChange), 2)) {
+            switch (bccomp(bcmul(array_values($netChange)[0], '-1', 2), end($netChange), 2)) {
                 case 1:
                     $newRepayments[] = $repayment
                         ->setDebtor($users[array_key_first($netChange)])
@@ -166,7 +164,7 @@ class RepaymentService implements RepaymentServiceInterface
                     $newRepayments[] = $repayment
                         ->setDebtor($users[array_key_first($netChange)])
                         ->setCreditor($users[array_key_last($netChange)])
-                        ->setValue(bcmul(array_values($netChange)[0],'-1', 2));
+                        ->setValue(bcmul(array_values($netChange)[0], '-1', 2));
                     $netChange[array_key_last($netChange)] = bcadd(array_values($netChange)[0], end($netChange), 2);
                     unset($netChange[array_key_first($netChange)]);
                     break;
