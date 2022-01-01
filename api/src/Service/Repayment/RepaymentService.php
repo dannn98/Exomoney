@@ -17,6 +17,133 @@ use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+////Algorytm
+//while (true) {
+//    asort($netChange);
+//    $repayment = new Repayment();
+//    $repayment->setTeam($team);
+//
+////            foreach ($netChange as $key1 => $value1) {
+////                foreach ($netChange as $key2 => $value2) {
+////                    if ($key1 === $key2) {
+////                        continue;
+////                    }
+////                    if (bcmul($value1, '-1', 2) === $value2) {
+////                        $repayment2 = new Repayment();
+////                        $repayment2->setTeam($team);
+////                        $newRepayments[] = $repayment2
+////                            ->setDebtor($users[$key1])
+////                            ->setCreditor($users[$key2])
+////                            ->setValue($value2);
+////                        unset($netChange[$key1]);
+////                        unset($netChange[$key2]);
+////                        break;
+////                    }
+////                }
+////            }
+//
+//    if (empty($netChange)) {
+//        break;
+//    }
+//
+//    switch (bccomp(bcmul(array_values($netChange)[0], '-1', 2), end($netChange), 2)) {
+//        case 1:
+//            $newRepayments[] = $repayment
+//                ->setDebtor($users[array_key_first($netChange)])
+//                ->setCreditor($users[array_key_last($netChange)])
+//                ->setValue(end($netChange));
+//            $netChange[array_key_first($netChange)] = bcadd(array_values($netChange)[0], end($netChange), 2);
+//            unset($netChange[array_key_last($netChange)]);
+//            break;
+//        case 0:
+//            $newRepayments[] = $repayment
+//                ->setDebtor($users[array_key_first($netChange)])
+//                ->setCreditor($users[array_key_last($netChange)])
+//                ->setValue(end($netChange));
+//            unset($netChange[array_key_first($netChange)]);
+//            unset($netChange[array_key_last($netChange)]);
+//            break;
+//        case -1:
+//            $newRepayments[] = $repayment
+//                ->setDebtor($users[array_key_first($netChange)])
+//                ->setCreditor($users[array_key_last($netChange)])
+//                ->setValue(bcmul(array_values($netChange)[0], '-1', 2));
+//            $netChange[array_key_last($netChange)] = bcadd(array_values($netChange)[0], end($netChange), 2);
+//            unset($netChange[array_key_first($netChange)]);
+//            break;
+//    }
+//}
+
+
+
+//$debts = array();
+//$credits = array();
+//
+//foreach ($netChange as $key => $value) {
+//    if ($value[0] === '-') {
+//        $debts[$key] = $value;
+//        continue;
+//    }
+//    $credits[$key] = $value;
+//}
+//
+////Algorytm
+//while (true) {
+//    asort($credits);
+//    asort($debts);
+//    $debts = array_reverse($debts, true);
+//    dd($debts, $credits, count($debts) + count($credits));
+//    $repayment = new Repayment();
+//    $repayment->setTeam($team);
+//
+//    foreach ($debts as $key1 => $value1) {
+//        foreach ($credits as $key2 => $value2) {
+//            if (bcmul($value1, '-1', 2) === $value2) {
+//                $repayment2 = new Repayment();
+//                $repayment2->setTeam($team);
+//                $newRepayments[] = $repayment2
+//                    ->setDebtor($users[$key1])
+//                    ->setCreditor($users[$key2])
+//                    ->setValue($value2);
+//                unset($debts[$key1]);
+//                unset($credits[$key2]);
+//                break;
+//            }
+//        }
+//    }
+//
+//    if (empty($debts) && empty($credits)) {
+//        break;
+//    }
+//
+//    switch (bccomp(bcmul(array_values($debts)[0], '-1', 2), array_values($credits)[0], 2)) {
+//        case 1:
+//            $newRepayments[] = $repayment
+//                ->setDebtor($users[array_key_first($debts)])
+//                ->setCreditor($users[array_key_first($credits)])
+//                ->setValue(array_values($credits)[0]);
+//            $debts[array_key_first($debts)] = bcadd(array_values($debts)[0], array_values($credits)[0], 2);
+//            unset($credits[array_key_first($credits)]);
+//            break;
+//        case 0:
+//            $newRepayments[] = $repayment
+//                ->setDebtor($users[array_key_first($debts)])
+//                ->setCreditor($users[array_key_first($credits)])
+//                ->setValue(array_values($credits)[0]);
+//            unset($debts[array_key_first($debts)]);
+//            unset($credits[array_key_first($credits)]);
+//            break;
+//        case -1:
+//            $newRepayments[] = $repayment
+//                ->setDebtor($users[array_key_first($debts)])
+//                ->setCreditor($users[array_key_first($credits)])
+//                ->setValue(bcmul(array_values($debts)[0], '-1', 2));
+//            $credits[array_key_first($credits)] = bcadd(array_values($debts)[0], array_values($credits)[0], 2);
+//            unset($debts[array_key_first($debts)]);
+//            break;
+//    }
+//}
+
 class RepaymentService implements RepaymentServiceInterface
 {
     private ValidatorDTOInterface $validator;
@@ -170,6 +297,8 @@ class RepaymentService implements RepaymentServiceInterface
                     break;
             }
         }
+
+        if (count($oldRepayments) <= count($newRepayments)) return;
 
         try {
             Transaction::beginTransaction();

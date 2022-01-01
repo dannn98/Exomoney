@@ -21,7 +21,7 @@ App\Entity\Repayment:
     team: '@team'
     debtor: '@user_*'
     creditor: '@user_*'
-    value: '<(mt_rand(1, 10000)/100)>'
+    value: '<(mt_rand(1, 100))>'
 
 
 #App\Entity\Debt:
