@@ -8,6 +8,7 @@ use App\Traits\ModifiedAt;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TeamRepository::class)
@@ -24,6 +25,7 @@ class Team
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
+    #[Groups(['Get_team_list'])]
     private int $id;
 
     /**
@@ -35,11 +37,13 @@ class Team
     /**
      * @ORM\Column(type="string", length=255)
      */
+    #[Groups(['Get_team_list'])]
     private string $name;
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
+    #[Groups(['Get_team_list'])]
     private string $avatarUrl;
 
     /**

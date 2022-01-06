@@ -25,7 +25,8 @@
         "symfony/serializer": "5.3.*",
         "symfony/validator": "5.3.*",
         "symfony/yaml": "5.3.*",
-        "trikoder/oauth2-bundle": "^3.2"
+        "trikoder/oauth2-bundle": "^3.2",
+      "ext-bcmath": "*"
     },
     "require-dev": {
         "nelmio/alice": "^3.9",

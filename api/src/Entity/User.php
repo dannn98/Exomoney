@@ -28,19 +28,19 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['Get_debt_list'])]
+    #[Groups(['Get_debt_list', 'Get_member_list', 'Get_repayment_list'])]
     private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    #[Groups(['Get_debt_list'])]
+    #[Groups(['Get_debt_list', 'Get_member_list', 'Get_repayment_list'])]
     private ?string $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['Get_debt_list'])]
+    #[Groups(['Get_debt_list', 'Get_member_list', 'Get_repayment_list'])]
     private $nickname;
 
     /**
@@ -54,25 +54,25 @@ class User implements UserInterface
     private ?string $password;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Team::class, inversedBy="users")
+     * @ORM\ManyToMany(targetEntity=Team::class, inversedBy="users", fetch="EAGER")
      */
     private $teams;
 
     /**
-     * @ORM\OneToMany(targetEntity=Debt::class, mappedBy="debtor")
+     * @ORM\OneToMany(targetEntity=Repayment::class, mappedBy="debtor", fetch="EAGER")
      */
-    private $debts;
+    private $debtsFromRepayments;
 
     /**
-     * @ORM\OneToMany(targetEntity=Debt::class, mappedBy="creditor")
+     * @ORM\OneToMany(targetEntity=Repayment::class, mappedBy="creditor", fetch="EAGER")
      */
-    private $credits;
+    private $creditsFromRepayments;
 
     public function __construct()
     {
         $this->teams = new ArrayCollection();
-        $this->debts = new ArrayCollection();
-        $this->credits = new ArrayCollection();
+        $this->debtsFromRepayments = new ArrayCollection();
+        $this->creditsFromRepayments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -88,6 +88,18 @@ class User implements UserInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getNickname(): ?string
+    {
+        return $this->nickname;
+    }
+
+    public function setNickname(string $nickname): self
+    {
+        $this->nickname = $nickname;
 
         return $this;
     }
@@ -190,74 +202,18 @@ class User implements UserInterface
     }
 
     /**
-     * @return Collection|Debt[]
+     * @return Collection|Repayment[]
      */
-    public function getDebts(): Collection
+    public function getDebtsFromRepayments(): Collection
     {
-        return $this->debts;
-    }
-
-    public function addDebt(Debt $debt): self
-    {
-        if (!$this->debts->contains($debt)) {
-            $this->debts[] = $debt;
-            $debt->setDebtor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeDebt(Debt $debt): self
-    {
-        if ($this->debts->removeElement($debt)) {
-            // set the owning side to null (unless already changed)
-            if ($debt->getDebtor() === $this) {
-                $debt->setDebtor(null);
-            }
-        }
-
-        return $this;
+        return $this->debtsFromRepayments;
     }
 
     /**
-     * @return Collection|Debt[]
+     * @return Collection|Repayment[]
      */
-    public function getCredits(): Collection
+    public function getCreditsFromRepayments(): Collection
     {
-        return $this->credits;
-    }
-
-    public function addCredit(Debt $credit): self
-    {
-        if (!$this->credits->contains($credit)) {
-            $this->credits[] = $credit;
-            $credit->setCreditor($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCredit(Debt $credit): self
-    {
-        if ($this->credits->removeElement($credit)) {
-            // set the owning side to null (unless already changed)
-            if ($credit->getCreditor() === $this) {
-                $credit->setCreditor(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function getNickname(): ?string
-    {
-        return $this->nickname;
-    }
-
-    public function setNickname(string $nickname): self
-    {
-        $this->nickname = $nickname;
-
-        return $this;
+        return $this->creditsFromRepayments;
     }
 }

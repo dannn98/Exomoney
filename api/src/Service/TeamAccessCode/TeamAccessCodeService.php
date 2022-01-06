@@ -50,7 +50,7 @@ class TeamAccessCodeService implements TeamAccessCodeServiceInterface
      * @throws ApiException
      * @throws Exception
      */
-    public function addTeamAccessCode(TeamAccessCodeDataObject $dto, UserInterface $user): bool
+    public function addTeamAccessCode(TeamAccessCodeDataObject $dto, UserInterface $user): string
     {
         $this->validator->validate($dto);
 
@@ -78,6 +78,6 @@ class TeamAccessCodeService implements TeamAccessCodeServiceInterface
             throw $e;
         }
 
-        return true;
+        return $code;
     }
 }

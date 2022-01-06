@@ -36,11 +36,6 @@ class ApiResponse extends JsonResponse
             $data = new \ArrayObject();
         }
 
-        $jsonDecode = json_decode($data);
-        if(json_last_error() === JSON_ERROR_NONE) {
-            $data = $jsonDecode;
-        }
-
         $response = [
             'message' => $message,
             'data' => $data

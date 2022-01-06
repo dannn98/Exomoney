@@ -2,59 +2,53 @@
 
 namespace App\Entity;
 
-use App\Repository\DebtRepository;
+use App\Repository\RepaymentRepository;
 use App\Traits\CreatedAt;
 use App\Traits\ModifiedAt;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ORM\Entity(repositoryClass=DebtRepository::class)
+ * @ORM\Entity(repositoryClass=RepaymentRepository::class)
  * @ORM\HasLifecycleCallbacks()
  */
-class Debt
+class Repayment
 {
     use CreatedAt;
     use ModifiedAt;
 
     /**
+     * @ORM\Column(type="string", nullable=false, unique=true)
+     */
+    private $uid;
+
+    /**
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    #[Groups(['Get_debt_list'])]
-    private ?int $id;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    #[Groups(['Get_debt_list'])]
-    private $title;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Team::class, inversedBy="debts")
+     * @ORM\ManyToOne(targetEntity=Team::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $team;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="debtsFromRepayments")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(['Get_debt_list'])]
+    #[Groups(['Get_repayment_list'])]
     private $debtor;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\Id
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="creditsFromRepayments")
      * @ORM\JoinColumn(nullable=false)
      */
-    #[Groups(['Get_debt_list'])]
+    #[Groups(['Get_repayment_list'])]
     private $creditor;
 
     /**
      * @ORM\Column(type="decimal", precision=10, scale=2)
      */
-    #[Groups(['Get_debt_list'])]
+    #[Groups(['Get_repayment_list'])]
     private $value;
 
     public function getId(): ?int
@@ -62,28 +56,12 @@ class Debt
         return $this->id;
     }
 
-    public function getTitle(): ?string
+    /**
+     * @ORM\PrePersist
+     */
+    public function setId(): void
     {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-
-        return $this;
-    }
-
-    public function getTeam(): ?Team
-    {
-        return $this->team;
-    }
-
-    public function setTeam(?Team $team): self
-    {
-        $this->team = $team;
-
-        return $this;
+        $this->uid = uniqid();
     }
 
     public function getDebtor(): ?User
@@ -110,12 +88,24 @@ class Debt
         return $this;
     }
 
+    public function getTeam(): ?Team
+    {
+        return $this->team;
+    }
+
+    public function setTeam(?Team $team): self
+    {
+        $this->team = $team;
+
+        return $this;
+    }
+
     public function getValue(): ?string
     {
         return $this->value;
     }
 
-    public function setValue(?string $value): self
+    public function setValue(string $value): self
     {
         $this->value = $value;
 
