@@ -1,17 +1,39 @@
 <template>
-    <form>
+    <form @submit.prevent="handleLogin">
         <p>Zaloguj się i rozliczaj się wydajnie!</p>
-        <input type="text" placeholder="Email">
-        <input type="password" placeholder="Hasło">
+        <p class='message' v-for="message in messages" v-bind:key="message">{{message.message}}</p>
+        <input v-model="user.email" type="text" placeholder="Email">
+        <input v-model="user.password" type="password" placeholder="Hasło">
         <p>Nie masz jeszcze konta? Kliknij <router-link class='tutaj' to="/register">tutaj</router-link> i dołącz do nas!</p>
         <button class='pointer'>Zaloguj się</button>
     </form>
 </template>
 
 <script>
+import User from '@/models/user'
+
 export default {
     name: 'LoginForm',
-    components: {}
+    components: {},
+    data() {
+        return {
+            user: new User('', '', ''),
+            messages: []
+        }
+    },
+    methods: {
+        handleLogin() {
+            this.messages = []
+
+            const data = {
+                email: this.user.email,
+                password: this.user.password
+            }
+            
+            console.log(data)
+            this.messages[0] = {message: 'Podano zły login lub hasło'}
+        }
+    }
 }
 </script>
 

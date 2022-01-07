@@ -1,13 +1,22 @@
 <template>
     <div class='team-list-elem pointer'>
         <img src='http://localhost:8081/uploads/team/avatars/default.png'>
-        <p>Nazwa zespołu</p>
+        <p>{{name}}</p>
     </div>
 </template>
 
 <script>
 export default {
-    
+    name: 'TeamListElem',
+    components: {},
+    data() {
+
+    },
+    props: {
+        id: {required: true, type: Number},
+        name: {required: true, type: String},
+        avatar_url: {required: true, type: String}
+    }
 }
 </script>
 
@@ -20,7 +29,6 @@ export default {
         display: flex;
         align-items: center;
 
-        /* background-color: #224957; */
         background-color: rgba(0, 0, 0, 0.3);
     }
 
@@ -33,8 +41,8 @@ export default {
     }
 
     .team-list-elem > p {
-        font-size: 20px;
-        font-weight: 300;
+        font-size: 18px;
+        font-weight: 200;
 
         margin-left: 11px;
 

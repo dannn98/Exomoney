@@ -12,16 +12,12 @@
         <div class='right-content'>
             <h2>Lista zespołów do których należysz:</h2>
             <div class='team-list'>
-                <TeamListElem></TeamListElem>
-                <TeamListElem></TeamListElem>
-                <TeamListElem></TeamListElem>
-                <TeamListElem></TeamListElem>
-                <TeamListElem></TeamListElem>
-                <TeamListElem></TeamListElem>
-                <TeamListElem></TeamListElem>
-                <TeamListElem></TeamListElem>
-                <TeamListElem></TeamListElem>
-                <TeamListElem></TeamListElem>
+                <TeamListElem v-for="team in teams" v-bind:key="team"
+                    :id="team.id"
+                    :name="team.name"
+                    :avatar_url="team.avatarUrl"
+                >
+                </TeamListElem>
             </div>
         </div>
     </div>
@@ -32,7 +28,29 @@ import TeamListElem from '@/components/TeamListElem'
 
 export default {
     name: 'Home',
-    components: {TeamListElem}
+    components: {TeamListElem},
+    data() {
+        return {
+            teams: []
+        }
+    },
+    created() {
+        this.fetchTeams();
+    },
+    methods: {
+        fetchTeams() {
+            this.teams[0] = {id: 12, name: 'Zespół testowy 1', avatarUrl: 'http://localhost:8081/uploads/team/avatars/default.png'}
+            this.teams[1] = {id: 13, name: 'Dawidoland', avatarUrl: 'default.png'}
+            this.teams[2] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+            // this.teams[3] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+            // this.teams[4] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+            // this.teams[5] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+            // this.teams[6] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+            // this.teams[7] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+            // this.teams[8] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+            // this.teams[9] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+        }
+    }
 }
 </script>
 
@@ -136,7 +154,7 @@ export default {
 
     .team-list {
         width: 80%;
-        height: 85%;
+        height: 564px;
         margin-top: 11px;
 
         overflow-y: auto;

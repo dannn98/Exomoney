@@ -32,6 +32,12 @@ main {
 .pointer {
   cursor: pointer;
 }
+
+.message {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgb(190, 0, 0);
+}
 /* #nav {
   padding: 30px;
 }

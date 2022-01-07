@@ -1,19 +1,46 @@
 <template>
-    <form>
+    <form @submit.prevent="handleRegister">
         <p>Dołącz do nas i wejdź w świat optymalizacji!</p>
-        <input type="text" placeholder="Nickname">
-        <input type="text" placeholder="Email">
-        <input type="password" placeholder="Hasło">
-        <input type="password" placeholder="Powtórz hasło">
+        <p class='message' v-for="message in messages" v-bind:key="message">{{message.message}}</p>
+        <input v-model="this.user.nickane" type="text" placeholder="Nickname">
+        <input v-model="this.user.email" type="text" placeholder="Email">
+        <input v-model="this.user.password" type="password" placeholder="Hasło">
+        <input v-model="this.repeat_password" type="password" placeholder="Powtórz hasło">
         <p>Masz już konto? Kliknij <router-link class='tutaj' to="/login">tutaj</router-link> i zaloguj się!</p>
         <button class='pointer'>Zarejestruj się</button>
     </form>
 </template>
 
 <script>
+import User from '@/models/user'
+
 export default {
     name: 'RegisterForm',
-    components: {}
+    components: {},
+    data() {
+        return {
+            user: new User('', '', ''),
+            repeat_password: '',
+            messages: []
+        }
+    },
+    methods: {
+        handleRegister() {
+            this.messages = []
+            const data = {
+                nickname: this.user.nickname,
+                email: this.user.email,
+                password: this.user.password
+            }
+
+            if (this.user.password !== this.repeat_password) {
+                this.messages[0] = {message: "Hasła nie są takie same"}
+            }
+            else {
+                console.log(data, {repeat: this.repeat_password})
+            }
+        }
+    }
 }
 </script>
 
