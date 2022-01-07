@@ -11,6 +11,7 @@
 
 <script>
 import User from '@/models/user'
+import axios from 'axios'
 
 export default {
     name: 'LoginForm',
@@ -29,9 +30,16 @@ export default {
                 email: this.user.email,
                 password: this.user.password
             }
-            
+
             console.log(data)
-            this.messages[0] = {message: 'Podano zły login lub hasło'}
+            axios.post('http://localhost:8081/api/v1/auth/login', data)
+            .then(Response => {
+                console.log(Response.data)
+            })
+            .catch(function(error) {
+                this.messages[0] = {message: 'Podano zły login lub hasło'}
+                console.log(error)
+            })
         }
     }
 }
