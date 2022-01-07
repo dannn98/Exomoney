@@ -33,11 +33,13 @@ export default {
         top: 0px;
         left: 0px;
         background-color: #224957;
+        /* background-color: rgba(0, 0, 0, 0.4); */
     }
 
     .under-header {
         width: 100%;
         height: 80px;
+        background-color: #68868C;
     }
 
     .header-content {
