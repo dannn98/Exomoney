@@ -1,8 +1,10 @@
 <template>
     <form @submit.prevent="handleRegister">
         <p>Dołącz do nas i wejdź w świat optymalizacji!</p>
+        <div style="margin-bottom: 0px;">
         <p class='message' v-for="message in messages" v-bind:key="message">{{message.message}}</p>
-        <input v-model="this.user.nickane" type="text" placeholder="Nickname">
+        </div>
+        <input v-model="this.user.nickname" type="text" placeholder="Nickname">
         <input v-model="this.user.email" type="text" placeholder="Email">
         <input v-model="this.user.password" type="password" placeholder="Hasło">
         <input v-model="this.repeat_password" type="password" placeholder="Powtórz hasło">
@@ -13,6 +15,7 @@
 
 <script>
 import User from '@/models/user'
+import axios from 'axios'
 
 export default {
     name: 'RegisterForm',
@@ -37,7 +40,23 @@ export default {
                 this.messages[0] = {message: "Hasła nie są takie same"}
             }
             else {
-                console.log(data, {repeat: this.repeat_password})
+                axios.post('http://localhost:8081/api/v1/user', data)
+                .then(() => {
+                    this.$router.push('/login')
+                })
+                .catch((error) => {
+                    if (error.response.status == 422) {
+                        let response_data = error.response.data.data
+                        
+                        console.log(response_data)
+
+                        for (const [key, value] of Object.entries(response_data)) {
+                            console.log(`${key}: ${value}`)
+                            this.messages.push({message: `${key}: ${value}`})
+                        }
+                    }
+
+                })
             }
         }
     }
@@ -107,5 +126,13 @@ export default {
 
     .tutaj {
         color: #39BB7A;
+    }
+
+    .message {
+        margin-bottom: 0px;
+    }
+
+    .message:last-child {
+        margin-bottom: 11px;
     }
 </style>

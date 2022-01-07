@@ -1,7 +1,9 @@
 <template>
     <form @submit.prevent="handleLogin">
         <p>Zaloguj się i rozliczaj się wydajnie!</p>
+        <div style="margin-bottom: 0px;">
         <p class='message' v-for="message in messages" v-bind:key="message">{{message.message}}</p>
+        </div>
         <input v-model="user.email" type="text" placeholder="Email">
         <input v-model="user.password" type="password" placeholder="Hasło">
         <p>Nie masz jeszcze konta? Kliknij <router-link class='tutaj' to="/register">tutaj</router-link> i dołącz do nas!</p>
@@ -34,11 +36,14 @@ export default {
             console.log(data)
             axios.post('http://localhost:8081/api/v1/auth/login', data)
             .then(Response => {
-                console.log(Response.data)
+                localStorage.setItem('access_token', Response.data.access_token)
+                this.$router.push('/')
             })
-            .catch(function(error) {
-                this.messages[0] = {message: 'Podano zły login lub hasło'}
-                console.log(error)
+            .catch((error) => {
+                if (error.response.status == 400) {
+                    this.messages[0] = {message: 'Podano zły login lub hasło'}
+                    console.log(error)
+                }
             })
         }
     }
@@ -108,5 +113,13 @@ export default {
 
     .tutaj {
         color: #39BB7A;
+    }
+
+    .message {
+        margin-bottom: 0px;
+    }
+
+    .message:last-child {
+        margin-bottom: 11px;
     }
 </style>

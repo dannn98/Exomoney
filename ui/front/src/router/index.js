@@ -48,11 +48,16 @@ const publicPages = ['/login', '/register']
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title;
   const authRequired = !publicPages.includes(to.path)
-  const hasToken = localStorage.getItem('token');
+  const hasToken = localStorage.getItem('access_token')
 
   if (authRequired && !hasToken) {
-    // return next('/login');
+    return next('/login')
   }
+
+  if (!authRequired && hasToken) {
+    return next('/')
+  }
+
   next();
 });
 

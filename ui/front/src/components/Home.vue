@@ -79,11 +79,12 @@ export default {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
         background-color: rgba(0,0,0,0.1);
     }
 
     .right-content > h2 {
-        margin-top: 30px;
+        /* margin-top: 30px; */
         color: white;
         font-weight: 300;
     }

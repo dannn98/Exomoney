@@ -6,7 +6,7 @@
                 <h2>Exomoney</h2>
             </div>
             <nav>
-                <button class='pointer'>Wyloguj się</button>
+                <button class='pointer' @click="handleLogout">Wyloguj się</button>
                 <router-link to="/login" class="nav-elem">O nas</router-link>
                 <!-- <router-link to="#" class="nav-elem">Profil użytkownika</router-link> -->
                 <router-link to="/" class="nav-elem">Strona Główna</router-link>
@@ -20,7 +20,13 @@
 <script>
 export default {
     name: 'Header',
-    components: {}
+    components: {},
+    methods: {
+        handleLogout() {
+            localStorage.removeItem('access_token');
+            this.$router.push('login')
+        }
+    }
 }
 </script>
 
