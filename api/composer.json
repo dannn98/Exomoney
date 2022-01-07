@@ -5,6 +5,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.0",
+        "ext-bcmath": "*",
         "ext-ctype": "*",
         "ext-iconv": "*",
         "composer/package-versions-deprecated": "1.11.99.4",
@@ -12,6 +13,7 @@
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/doctrine-migrations-bundle": "^3.1",
         "doctrine/orm": "^2.10",
+        "nelmio/cors-bundle": "^2.2",
         "nyholm/psr7": "^1.4",
         "symfony/console": "5.3.*",
         "symfony/dotenv": "5.3.*",
@@ -25,8 +27,7 @@
         "symfony/serializer": "5.3.*",
         "symfony/validator": "5.3.*",
         "symfony/yaml": "5.3.*",
-        "trikoder/oauth2-bundle": "^3.2",
-      "ext-bcmath": "*"
+        "trikoder/oauth2-bundle": "^3.2"
     },
     "require-dev": {
         "nelmio/alice": "^3.9",
