@@ -2,10 +2,16 @@
     <div class='home-main'>
         <div class='left-content'>
             <h2>Stwórz zespół</h2>
-            <button class='pointer'>Stwórz</button>
-            <form>
+            <form class='create-team-form' @submit.prevent="handleCreateTeam">
+                <p>Podaj nazwę zespołu, opcjonalnie wybierz awatar.</p>
+                <input v-model="team.name" type="text" placeholder="Nazwa zespołu">
+                <input @change="uploadFile" type="file" accept="image/png, image/jpeg">
+                <button class='pointer'>Stwórz</button>
+            </form>
+            <form class='join-team-form' @submit.prevent="handleJoinTeam">
                 <h2>Dołącz do zespołu</h2>
-                <input type="password" placeholder="Kod dostępu">
+                <p>Podaj kod dostępu. Poproś o kod właściciela zespołu.</p>
+                <input v-model="code" type="password" placeholder="Kod dostępu">
                 <button class='pointer'>Dołącz</button>
             </form>
         </div>
@@ -25,13 +31,20 @@
 
 <script>
 import TeamListElem from '@/components/TeamListElem'
+import {customAxios} from '@/services/axios.service'
+import authHeader from '@/services/auth-header'
 
 export default {
     name: 'Home',
     components: {TeamListElem},
     data() {
         return {
-            teams: []
+            teams: [],
+            team: {
+                name: '',
+                avatar_file: null
+            },
+            code: "",
         }
     },
     created() {
@@ -39,9 +52,14 @@ export default {
     },
     methods: {
         fetchTeams() {
-            this.teams[0] = {id: 12, name: 'Zespół testowy 1', avatarUrl: 'http://localhost:8081/uploads/team/avatars/default.png'}
-            this.teams[1] = {id: 13, name: 'Dawidoland', avatarUrl: 'default.png'}
-            this.teams[2] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+            customAxios.get('/user/teams', {headers: {'Authorization': authHeader()}})
+            .then(Response => {
+                this.teams = Response.data.data
+                console.log(this.teams)
+            })
+            // this.teams[0] = {id: 12, name: 'Zespół testowy 1', avatarUrl: 'http://localhost:8081/uploads/team/avatars/default.png'}
+            // this.teams[1] = {id: 13, name: 'Dawidoland', avatarUrl: 'default.png'}
+            // this.teams[2] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
             // this.teams[3] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
             // this.teams[4] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
             // this.teams[5] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
@@ -49,6 +67,32 @@ export default {
             // this.teams[7] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
             // this.teams[8] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
             // this.teams[9] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+        },
+        uploadFile(event) {
+            this.team.avatar_file = event.target.files[0]
+        },
+        handleCreateTeam() {
+            let data = new FormData()
+            data.append('name', this.team.name);
+            if(this.team.avatar_file !== null) {
+                data.append('avatar_file', this.team.avatar_file);
+            }
+            
+            customAxios.post('/team', data, {headers: {'Authorization': authHeader(), 'Content-Type': 'multipart/form-data'}})
+            .then(Response => {
+                this.$router.push(`/team/${Response.data.data}`)
+            })
+        },
+        handleJoinTeam() {
+            const data = {
+                code: this.code
+            }
+
+            customAxios.post('/team/join', data, {headers: {'Authorization': authHeader()}})
+            .then(Response => {
+                this.$router.push(`/team/${Response.data.data}`)
+            })
+            //TODO: catch
         }
     }
 }
@@ -122,7 +166,7 @@ export default {
         outline-color: rgb(22, 75, 47);
     }
 
-    form > input {
+    input[type= 'text'], input[type= 'password'] {
         width: 280px;
         height: 45px;
         padding-left: 20px;
@@ -137,16 +181,50 @@ export default {
         color: white;
     }
 
-    form > input::placeholder {
+    input[type= 'text']::placeholder, input[type= 'password']::placeholder {
         font-weight: 300;
         font-size: 14px;
         color: whitesmoke;
     }
 
-    form > input:focus {
+    input[type= 'text']:focus, input[type= 'password']:focus {
         outline-style: solid;
         outline-width: 1px;
         outline-color: #39BB7A;
+    }
+
+    input[type= 'file'] {
+        width: 300px;
+        height: 46px;
+
+        padding-top: 1px;
+        padding-left: 1px;
+
+        font-weight: 300;
+        font-size: 11px;
+        color: white;
+    }
+
+    input[type= 'file']::-webkit-file-upload-button {
+        height: 45px;
+        padding: 0 20px 0 20px;
+        margin-right: 20px;
+        cursor: pointer;
+
+        border: 0;
+        border-radius: 10px;
+        background: #39BB7A;
+
+        font-family: 'Lexend Deca';
+        font-weight: 300;
+        font-size: 14px;
+        color: white;
+    }
+
+    input[type= 'file']::-webkit-file-upload-button:hover {
+        outline-width: 1px;
+        outline-style: solid;
+        outline-color: rgb(22, 75, 47);
     }
 
     .left-content * {
@@ -161,5 +239,11 @@ export default {
         overflow-y: auto;
 
         background-color: rgba(0,0,0,0.1);
+    }
+
+    .left-content p {
+        font-weight: 300;
+        font-size: 12px;
+        color: white;
     }
 </style>

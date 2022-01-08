@@ -15,7 +15,7 @@
 
 <script>
 import User from '@/models/user'
-import axios from 'axios'
+import {customAxios} from '@/services/axios.service'
 
 export default {
     name: 'RegisterForm',
@@ -40,18 +40,15 @@ export default {
                 this.messages[0] = {message: "Hasła nie są takie same"}
             }
             else {
-                axios.post('http://localhost:8081/api/v1/user', data)
+                customAxios.post('/user', data)
                 .then(() => {
                     this.$router.push('/login')
                 })
                 .catch((error) => {
                     if (error.response.status == 422) {
                         let response_data = error.response.data.data
-                        
-                        console.log(response_data)
 
                         for (const [key, value] of Object.entries(response_data)) {
-                            console.log(`${key}: ${value}`)
                             this.messages.push({message: `${key}: ${value}`})
                         }
                     }

@@ -23,7 +23,7 @@ export default {
     components: {},
     methods: {
         handleLogout() {
-            localStorage.removeItem('access_token');
+            localStorage.removeItem('access_token')
             this.$router.push('login')
         }
     }

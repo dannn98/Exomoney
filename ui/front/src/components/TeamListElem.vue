@@ -1,8 +1,10 @@
 <template>
+    <router-link class="router-link-elem" :to="{ name: 'Team', params: { id: id }}">
     <div class='team-list-elem pointer'>
-        <img src='http://localhost:8081/uploads/team/avatars/default.png'>
+        <img :src="avatar_url">
         <p>{{name}}</p>
     </div>
+    </router-link>
 </template>
 
 <script>
@@ -32,7 +34,11 @@ export default {
         background-color: rgba(0, 0, 0, 0.3);
     }
 
-    .team-list-elem:last-child {
+    .router-link-elem {
+        text-decoration: none;
+    }
+
+    .router-link-elem:last-child {
         margin-bottom: 0px;
     }
 

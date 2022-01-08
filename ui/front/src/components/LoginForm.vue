@@ -13,7 +13,7 @@
 
 <script>
 import User from '@/models/user'
-import axios from 'axios'
+import {customAxios} from '@/services/axios.service'
 
 export default {
     name: 'LoginForm',
@@ -34,7 +34,7 @@ export default {
             }
 
             console.log(data)
-            axios.post('http://localhost:8081/api/v1/auth/login', data)
+            customAxios.post('/auth/login', data)
             .then(Response => {
                 localStorage.setItem('access_token', Response.data.access_token)
                 this.$router.push('/')
