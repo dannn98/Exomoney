@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import LoginView from '@/views/LoginView'
 import RegisterView from '@/views/RegisterView'
 import HomeView from '@/views/HomeView'
+import TeamView from '@/views/TeamView'
 
 const routes = [
   // {
@@ -34,6 +35,14 @@ const routes = [
     component: RegisterView,
     meta: {
       title: 'Exomoney - Zarejestruj się'
+    }
+  },
+  {
+    path: '/team/:id',
+    name: 'Team',
+    component: TeamView,
+    meta: {
+      title: 'Exomoney'
     }
   }
 ]
