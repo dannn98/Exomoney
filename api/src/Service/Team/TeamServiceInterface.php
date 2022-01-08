@@ -11,9 +11,9 @@ interface TeamServiceInterface
 {
     const DEFAULT_AVATAR = 'default.png';
 
-    public function createTeam(TeamDataObject $dto, UserInterface $user): bool;
+    public function createTeam(TeamDataObject $dto, UserInterface $user): int;
 
-    public function joinTeam(TeamAccessCodeDataObject $dto, UserInterface $user): bool;
+    public function joinTeam(TeamAccessCodeDataObject $dto, UserInterface $user): int;
 
     public function getDebtList(int $teamId, UserInterface $user): Collection;
 

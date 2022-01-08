@@ -5,12 +5,14 @@ namespace App\Service\User;
 use App\DataObject\UserDataObject;
 use App\Entity\User;
 use App\Exception\ApiException;
+use App\FileUploader\FileUploader;
 use App\Repository\UserRepository;
 use App\Service\Validator\ValidatorDTOInterface;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Doctrine\DBAL\Exception\UółniqueConstraintViolationException;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -20,6 +22,7 @@ class UserService implements UserServiceInterface
     private ValidatorDTOInterface $validator;
     private UserPasswordEncoderInterface $authenticatedUser;
     private UserRepository $userRepository;
+    private FileUploader $fileUploader;
 
     /**
      * UserService constructor
@@ -27,16 +30,19 @@ class UserService implements UserServiceInterface
      * @param ValidatorDTOInterface $validator
      * @param UserPasswordEncoderInterface $authenticatedUser
      * @param UserRepository $userRepository
+     * @param FileUploader $fileUploader
      */
     public function __construct(
         ValidatorDTOInterface $validator,
         UserPasswordEncoderInterface $authenticatedUser,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        FileUploader $fileUploader
     )
     {
         $this->validator = $validator;
         $this->authenticatedUser = $authenticatedUser;
         $this->userRepository = $userRepository;
+        $this->fileUploader = $fileUploader;
     }
 
     /**
@@ -81,7 +87,16 @@ class UserService implements UserServiceInterface
     public function getTeamList(UserInterface $user): Collection
     {
         /** @var User $user */
-        return $user->getTeams();
+        $teams = $user->getTeams();
+        foreach ($teams as $team) {
+            $team->setAvatarUrl(
+                Request::createFromGlobals()->getSchemeAndHttpHost() .
+                $this->fileUploader->getTargetUrl() .
+                $team->getAvatarUrl()
+            );
+        }
+
+        return $teams;
     }
 
     /**
@@ -97,13 +112,13 @@ class UserService implements UserServiceInterface
         $array['credits'] = $user->getCreditsFromRepayments();
 
         foreach ($array['debts'] as $i => $repayment) {
-            if($repayment->getValue() === '0.00') {
+            if ($repayment->getValue() === '0.00') {
                 unset($array['debts'][$i]);
             }
         }
 
         foreach ($array['credits'] as $i => $repayment) {
-            if($repayment->getValue() === '0.00') {
+            if ($repayment->getValue() === '0.00') {
                 unset($array['credits'][$i]);
             }
         }

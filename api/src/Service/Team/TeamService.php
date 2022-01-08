@@ -49,10 +49,10 @@ class TeamService implements TeamServiceInterface
      * @param TeamDataObject $dto
      * @param UserInterface $user
      *
-     * @return bool
+     * @return int
      * @throws ApiException
      */
-    public function createTeam(TeamDataObject $dto, UserInterface $user): bool
+    public function createTeam(TeamDataObject $dto, UserInterface $user): int
     {
         $this->validator->validate($dto);
 
@@ -70,7 +70,7 @@ class TeamService implements TeamServiceInterface
 
         }
 
-        return true;
+        return $team->getId();
     }
 
     /**
@@ -79,11 +79,12 @@ class TeamService implements TeamServiceInterface
      * @param TeamAccessCodeDataObject $dto
      * @param UserInterface $user
      *
-     * @return bool
+     * @return int
      * @throws ApiException
      */
-    public function joinTeam(TeamAccessCodeDataObject $dto, UserInterface $user): bool
+    public function joinTeam(TeamAccessCodeDataObject $dto, UserInterface $user): int
     {
+        $team = null;
         $this->validator->validate($dto, [$dto::JOIN_GROUP]);
 
         try {
@@ -113,7 +114,7 @@ class TeamService implements TeamServiceInterface
 
         }
 
-        return true;
+        return $team->getId();
     }
 
     /**

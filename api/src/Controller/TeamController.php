@@ -46,9 +46,9 @@ class TeamController extends AbstractController
     {
         $teamDTO = $this->dataObjectService->create($request, TeamDataObject::class);
 
-        $this->teamService->createTeam($teamDTO, $this->getUser());
+        $teamId = $this->teamService->createTeam($teamDTO, $this->getUser());
 
-        return new ApiResponse('Pomyślnie utworzono zespół', data: true, status: Response::HTTP_CREATED);
+        return new ApiResponse('Pomyślnie utworzono zespół', data: $teamId, status: Response::HTTP_CREATED);
     }
 
     /**
@@ -63,9 +63,9 @@ class TeamController extends AbstractController
     {
         $teamAccessCodeDTO = $this->dataObjectService->create($request, TeamAccessCodeDataObject::class);
 
-        $this->teamService->joinTeam($teamAccessCodeDTO, $this->getUser());
+        $teamId = $this->teamService->joinTeam($teamAccessCodeDTO, $this->getUser());
 
-        return new ApiResponse('Pomyślnie dodano użytkownika do zespołu', data: true, status: Response::HTTP_OK);
+        return new ApiResponse('Pomyślnie dodano użytkownika do zespołu', data: $teamId, status: Response::HTTP_OK);
     }
 
     /**

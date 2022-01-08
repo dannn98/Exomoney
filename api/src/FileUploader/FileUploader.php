@@ -9,17 +9,20 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 class FileUploader
 {
     private string $targetDirectory;
+    private string $targetUrl;
     private SluggerInterface $slugger;
 
     /**
      * FileUploader constructor
      *
      * @param string $targetDirectory
+     * @param string $targetUrl
      * @param SluggerInterface $slugger
      */
-    public function __construct(string $targetDirectory, SluggerInterface $slugger)
+    public function __construct(string $targetDirectory, string $targetUrl, SluggerInterface $slugger)
     {
         $this->targetDirectory = $targetDirectory;
+        $this->targetUrl = $targetUrl;
         $this->slugger = $slugger;
     }
 
@@ -34,7 +37,7 @@ class FileUploader
     {
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = $this->slugger->slug($originalFilename);
-        $fileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+        $fileName = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
         try {
             $file->move($this->getTargetDirectory(), $fileName);
@@ -53,5 +56,15 @@ class FileUploader
     public function getTargetDirectory(): string
     {
         return $this->targetDirectory;
+    }
+
+    /**
+     * Get target Url
+     *
+     * @return string
+     */
+    public function getTargetUrl(): string
+    {
+        return $this->targetUrl;
     }
 }
