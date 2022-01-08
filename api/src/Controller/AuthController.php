@@ -106,9 +106,9 @@ class AuthController extends AbstractController
         $response->headers->setCookie(
             Cookie::create('refresh_token')
                 ->withValue($responseData->refresh_token)
-                ->withExpires(864000)
-                ->withDomain('.example.com')
-                ->withSecure(true)
+                ->withExpires(strtotime('tomorrow'))
+                ->withDomain('localhost')
+                ->withSecure(false)
         );
 
         return $response;
