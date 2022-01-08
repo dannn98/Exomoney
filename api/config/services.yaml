@@ -8,6 +8,7 @@ parameters:
     oauth2_secret: '%env(OAUTH2_SECRET)%'
 
     team_avatars_directory: '%kernel.project_dir%/public/uploads/team/avatars'
+    team_avatars_public_url: '/uploads/team/avatars/'
 
 services:
     # default configuration for services in *this* file
@@ -76,3 +77,4 @@ services:
     App\FileUploader\FileUploader:
         arguments:
             $targetDirectory: '%team_avatars_directory%'
+            $targetUrl: '%team_avatars_public_url%'
