@@ -54,7 +54,7 @@ export default {
         fetchTeams() {
             customAxios.get('/user/teams', {headers: {'Authorization': authHeader()}})
             .then(Response => {
-                this.teams = Response.data.data
+                this.teams = Response.data.data.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0))
                 console.log(this.teams)
             })
             .catch((error) => {
