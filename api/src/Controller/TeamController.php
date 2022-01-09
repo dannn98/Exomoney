@@ -35,6 +35,21 @@ class TeamController extends AbstractController
     }
 
     /**
+     * @param int $teamId
+     *
+     * @return ApiResponse
+     */
+    #[Route(path: '/{teamId}', name: 'team', methods: ['GET'])]
+    public function getTeam(int $teamId): ApiResponse
+    {
+        $team = $this->teamService->getTeam($teamId, $this->getUser());
+
+        $data = $this->serializer->serialize($team, 'json', ['groups' => 'Get_team']);
+
+        return new ApiResponse('Dane zespołu', data: json_decode($data), status: Response::HTTP_OK);
+    }
+
+    /**
      * Create Team
      *
      * @param Request $request
