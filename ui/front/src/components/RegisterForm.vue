@@ -15,7 +15,7 @@
 
 <script>
 import User from '@/models/user'
-import {customAxios} from '@/services/axios.service'
+import {customAxios, NProgress} from '@/services/axios.service'
 
 export default {
     name: 'RegisterForm',
@@ -46,6 +46,7 @@ export default {
                 })
                 .catch((error) => {
                     if (error.response.status == 422) {
+                        NProgress.done()
                         let response_data = error.response.data.data
 
                         for (const [key, value] of Object.entries(response_data)) {

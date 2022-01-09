@@ -31,7 +31,7 @@
 
 <script>
 import TeamListElem from '@/components/TeamListElem'
-import {customAxios} from '@/services/axios.service'
+import {customAxios, NProgress} from '@/services/axios.service'
 import authHeader from '@/services/auth-header'
 
 export default {
@@ -57,16 +57,10 @@ export default {
                 this.teams = Response.data.data
                 console.log(this.teams)
             })
-            // this.teams[0] = {id: 12, name: 'Zespół testowy 1', avatarUrl: 'http://localhost:8081/uploads/team/avatars/default.png'}
-            // this.teams[1] = {id: 13, name: 'Dawidoland', avatarUrl: 'default.png'}
-            // this.teams[2] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
-            // this.teams[3] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
-            // this.teams[4] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
-            // this.teams[5] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
-            // this.teams[6] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
-            // this.teams[7] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
-            // this.teams[8] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
-            // this.teams[9] = {id: 14, name: 'Nooby Cinkrofa', avatarUrl: 'default.png'}
+            .catch((error) => {
+                NProgress.done()
+                console.log(error)
+            })
         },
         uploadFile(event) {
             this.team.avatar_file = event.target.files[0]
@@ -82,6 +76,11 @@ export default {
             .then(Response => {
                 this.$router.push(`/team/${Response.data.data}`)
             })
+            .catch((error) => {
+                NProgress.done()
+                console.log(error)
+            })
+            //TODO: catch
         },
         handleJoinTeam() {
             const data = {
@@ -91,6 +90,10 @@ export default {
             customAxios.post('/team/join', data, {headers: {'Authorization': authHeader()}})
             .then(Response => {
                 this.$router.push(`/team/${Response.data.data}`)
+            })
+            .catch((error) => {
+                NProgress.done()
+                console.log(error)
             })
             //TODO: catch
         }

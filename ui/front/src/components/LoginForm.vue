@@ -13,7 +13,7 @@
 
 <script>
 import User from '@/models/user'
-import {customAxios} from '@/services/axios.service'
+import {customAxios, NProgress} from '@/services/axios.service'
 
 export default {
     name: 'LoginForm',
@@ -41,6 +41,7 @@ export default {
             })
             .catch((error) => {
                 if (error.response.status == 400) {
+                    NProgress.done()
                     this.messages[0] = {message: 'Podano zły login lub hasło'}
                     console.log(error)
                 }
