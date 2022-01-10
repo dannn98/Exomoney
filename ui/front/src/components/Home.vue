@@ -208,7 +208,7 @@ export default {
         color: white;
     }
 
-    input[type= 'file']::-webkit-file-upload-button {
+    input[type= 'file']::-webkit-file-upload-button, input[type= 'file']::file-selector-button {
         height: 45px;
         padding: 0 20px 0 20px;
         margin-right: 20px;

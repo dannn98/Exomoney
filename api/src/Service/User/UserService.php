@@ -112,13 +112,13 @@ class UserService implements UserServiceInterface
         $array['credits'] = $user->getCreditsFromRepayments();
 
         foreach ($array['debts'] as $i => $repayment) {
-            if ($repayment->getValue() === '0.00') {
+            if ($repayment->getValue() === '0.00' || $repayment->getTeam()->getId() != $teamId) {
                 unset($array['debts'][$i]);
             }
         }
 
         foreach ($array['credits'] as $i => $repayment) {
-            if ($repayment->getValue() === '0.00') {
+            if ($repayment->getValue() === '0.00' || $repayment->getTeam()->getId() != $teamId) {
                 unset($array['credits'][$i]);
             }
         }

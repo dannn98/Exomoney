@@ -1,9 +1,9 @@
 <template>
     <router-link class="router-link-elem" :to="{ name: 'Team', params: { id: id }}">
-    <div class='team-list-elem pointer'>
-        <img :src="avatar_url">
-        <p>{{name}}</p>
-    </div>
+        <div class='team-list-elem pointer'>
+            <img :src="avatar_url">
+            <p>{{name}}</p>
+        </div>
     </router-link>
 </template>
 
@@ -38,7 +38,7 @@ export default {
         text-decoration: none;
     }
 
-    .router-link-elem:last-child {
+    .router-link-elem:last-child .team-list-elem {
         margin-bottom: 0px;
     }
 
