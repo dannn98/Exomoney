@@ -37,4 +37,8 @@ export default {
 
         background-color: rgba(0, 0, 0, 0.15);
     }
+
+    .repayment-list-elem:hover {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
 </style>

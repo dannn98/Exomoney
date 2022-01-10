@@ -52,7 +52,7 @@ export default {
     },
     methods: {
         fetchTeams() {
-            customAxios.get('/user/teams', {headers: {'Authorization': authHeader()}})
+            customAxios.get('/user/teams', {headers: authHeader()})
             .then(Response => {
                 this.teams = Response.data.data.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0))
                 console.log(this.teams)
@@ -72,7 +72,7 @@ export default {
                 data.append('avatar_file', this.team.avatar_file);
             }
             
-            customAxios.post('/team', data, {headers: {'Authorization': authHeader(), 'Content-Type': 'multipart/form-data'}})
+            customAxios.post('/team', data, {headers: authHeader('multipart/form-data')})
             .then(Response => {
                 this.$router.push(`/team/${Response.data.data}`)
             })
@@ -87,7 +87,7 @@ export default {
                 code: this.code
             }
 
-            customAxios.post('/team/join', data, {headers: {'Authorization': authHeader()}})
+            customAxios.post('/team/join', data, {headers: authHeader()})
             .then(Response => {
                 this.$router.push(`/team/${Response.data.data}`)
             })

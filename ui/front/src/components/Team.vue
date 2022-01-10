@@ -12,7 +12,7 @@
             </div>
             <div class='team-debts'>
                 <div class='debt-list'>
-                    <DebtListElem
+                    <DebtListElem style="background-color: rgba(0, 0, 0, 0.2);"
                         :id="0"
                         :title="'Tytuł długu'"
                         :debtor="{nickname: 'Kredytobiorca'}"
@@ -36,13 +36,14 @@
         <div class="right-content">
             <div class="control-panel">
                 <div class="control-panel-content">
-
+                    <button>Dodaj dług</button>
+                    <button>Kod zespołu</button>
                 </div>
             </div>
             <div class="team-repayments">
                 <div class="repayments-list">
                     <div class="repayment-header r-credit">Kredyty</div>
-                    <RepaymentListElem class="r-credit" v-for="credit in repayments.credits" v-bind:key="credit"
+                    <RepaymentListElem v-for="credit in repayments.credits" v-bind:key="credit"
                         :uid="credit.uid"
                         :user="credit.creditor"
                         :target="credit.debtor"
@@ -50,7 +51,7 @@
                     >
                     </RepaymentListElem>
                     <div class="repayment-header r-debt">Długi</div>
-                    <RepaymentListElem class="r-debt" v-for="rdebt in repayments.debts" v-bind:key="rdebt"
+                    <RepaymentListElem v-for="rdebt in repayments.debts" v-bind:key="rdebt"
                         :uid="rdebt.uid"
                         :user="rdebt.debtor"
                         :target="rdebt.creditor"
@@ -99,7 +100,7 @@
     },
     methods: {
         async fetchTeam() {
-            customAxios.get(`/team/${this.id}`, {headers: {'Authorization': authHeader()}})
+            customAxios.get(`/team/${this.id}`, {headers: authHeader()})
             .then(Response => {
                 this.team = Response.data.data
                 var d = document.getElementsByClassName("loading")
@@ -113,7 +114,7 @@
             })
         },
         async fetchDebts() {
-            customAxios.get(`/team/${this.id}/debts`, {headers: {'Authorization': authHeader()}})
+            customAxios.get(`/team/${this.id}/debts`, {headers: authHeader()})
             .then(Response => {
                 this.debts = Response.data.data
                 console.log(Response.data.data)
@@ -124,7 +125,7 @@
             })
         },
         async fetchRepayments() {
-            customAxios.get(`/user/team/${this.id}/repayments`, {headers: {'Authorization': authHeader()}})
+            customAxios.get(`/user/team/${this.id}/repayments`, {headers: authHeader()})
             .then(Response => {
                 this.repayments.debts = Response.data.data.debts
                 this.repayments.credits = Response.data.data.credits
@@ -175,7 +176,7 @@
         display: flex;
         align-items: center;
 
-        background-color: rgba(0, 0, 0, 0.25);
+        background-color: rgba(0, 0, 0, 0.275);
     }
 
     .team-header-content > img {
@@ -231,8 +232,37 @@
     .control-panel-content {
         width: calc(100% - 30px);
         height: 128px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .control-panel-content > button {
+        width: 100%;
+        height: 62.5px;
+
+        border: 0;
+        background: rgba(0, 0, 0, 0.2);
+
+        cursor: pointer;
+
+        font-weight: 100;
+        font-size: 16px;
+        color: white;
+    }
+
+    .control-panel-content button:hover {
+        color: #39BB7A;
         background-color: rgba(0, 0, 0, 0.25);
     }
+/* 
+    .control-panel-content > button:first-child{
+        margin-bottom: 5px;
+    } */
 
     .team-repayments {
         width: 100%;
@@ -254,14 +284,17 @@
 
         margin-bottom: 3px;
 
-        font-size: 14px;
-        font-weight: 300;
+        font-weight: 100;
+        font-size: 16px;
+
+        /* font-size: 14px;
+        font-weight: 300; */
 
         display: flex;
         justify-content: center;
         align-items: center;
 
-        background-color: rgba(0, 0, 0, 0.15);
+        background-color: rgba(0, 0, 0, 0.2);
     }
 
     .r-credit {
