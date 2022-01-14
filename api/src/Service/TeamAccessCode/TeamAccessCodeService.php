@@ -65,7 +65,7 @@ class TeamAccessCodeService implements TeamAccessCodeServiceInterface
             throw new ApiException('Użytkownik nie jest właścicielem', statusCode: Response::HTTP_FORBIDDEN);
         }
 
-        return $team->getTeamAccessCodes()[0]->getCode();
+        return isset($team->getTeamAccessCodes()[0]) ? $team->getTeamAccessCodes()[0]->getCode() : '';
     }
 
     /**

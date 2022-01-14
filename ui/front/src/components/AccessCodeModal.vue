@@ -41,8 +41,13 @@
                 this.messages = []
                 customAxios.get(`/team-access-code/team/${this.id}`, {headers: authHeader()})
                 .then(Response => {
-                    this.accessCode = Response.data.data
                     this.isOwner = true
+                    if (!Response.data.data) {
+                        this.accessCode = ' '
+                        this.messages[0] = 'Nie odnaleziono kodu, wygeneruj go'
+                        return
+                    }
+                    this.accessCode = Response.data.data
                     console.log(Response.data.data)
                 })
                 .catch(error => {
@@ -56,8 +61,12 @@
                 })
             },
             generateAccessCode() {
-
-                if (!this.isOwner) return
+                this.messages = []
+                this.accessCode = null
+                if (!this.isOwner) {
+                    this.messages[0] = "Nie masz uprawnień do wyświetlenia i generowania kodu"
+                    return
+                }
 
                 const data = {
                     team_id: this.id

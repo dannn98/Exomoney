@@ -11,6 +11,7 @@ use App\Repository\DebtRepository;
 use App\Repository\RepaymentRepository;
 use App\Repository\TeamRepository;
 use App\Repository\UserRepository;
+use App\Service\Repayment\RepaymentServiceInterface;
 use App\Service\Validator\ValidatorDTOInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -25,6 +26,7 @@ class DebtService implements DebtServiceInterface
     private TeamRepository $teamRepository;
     private UserRepository $userRepository;
     private RepaymentRepository $repaymentRepository;
+    private RepaymentServiceInterface $repaymentService;
 
     /**
      * DebtService construct
@@ -34,13 +36,15 @@ class DebtService implements DebtServiceInterface
      * @param TeamRepository $teamRepository
      * @param UserRepository $userRepository
      * @param RepaymentRepository $repaymentRepository
+     * @param RepaymentServiceInterface $repaymentService
      */
     public function __construct(
         ValidatorDTOInterface $validator,
         DebtRepository $debtRepository,
         TeamRepository $teamRepository,
         UserRepository $userRepository,
-        RepaymentRepository $repaymentRepository
+        RepaymentRepository $repaymentRepository,
+        RepaymentServiceInterface $repaymentService
     )
     {
         $this->validator = $validator;
@@ -48,6 +52,7 @@ class DebtService implements DebtServiceInterface
         $this->teamRepository = $teamRepository;
         $this->userRepository = $userRepository;
         $this->repaymentRepository = $repaymentRepository;
+        $this->repaymentService = $repaymentService;
     }
 
     /**
@@ -138,6 +143,8 @@ class DebtService implements DebtServiceInterface
             Transaction::rollback();
             throw $e;
         }
+
+        $this->repaymentService->optimiseRepayments($team);
 
         return true;
     }
