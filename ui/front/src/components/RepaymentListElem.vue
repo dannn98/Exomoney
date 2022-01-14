@@ -1,15 +1,24 @@
 <template>
-    <div class='repayment-list-elem pointer'>
+    <PayOffModal v-if="showPayOff" @close="showPayOff = false"
+        :uid="uid"
+        :value="value"
+    >
+    </PayOffModal>
+    <div @click="showPayOff = true" class='repayment-list-elem pointer'>
         <p>{{target.nickname}} ({{value}})</p>
     </div>
 </template>
 
 <script>
+import PayOffModal from '@/components/PayOffModal'
+
 export default {
     name: 'RepaymentListElem',
-    components: {},
+    components: {PayOffModal},
     data() {
-
+        return {
+            showPayOff: false,
+        }
     },
     props: {
         uid: {required: true, type: String},

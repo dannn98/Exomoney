@@ -1,4 +1,4 @@
-export default function authHeader(contentType = 'json') {
+export default function authHeader(contentType = 'application/json') {
     let access_token = localStorage.getItem('access_token')
 
     if (access_token) {

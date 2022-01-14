@@ -1,4 +1,13 @@
 <template>
+    <AddDebtModal v-if="showAddDebt" @close="showAddDebt = false"
+        :id="team.id"
+        :memberList="members"
+    >
+    </AddDebtModal>
+    <AccessCodeModal v-if="showAccessCode" @close="showAccessCode = false"
+        :id="team.id"
+    >
+    </AccessCodeModal>
     <div class="team-main">
         <div class="left-content">
             <div class='team-header'>
@@ -36,8 +45,8 @@
         <div class="right-content">
             <div class="control-panel">
                 <div class="control-panel-content">
-                    <button>Dodaj dług</button>
-                    <button>Kod zespołu</button>
+                    <button @click="showAddDebt = true">Dodaj dług</button>
+                    <button @click="showAccessCode = true">Kod zespołu</button>
                 </div>
             </div>
             <div class="team-repayments">
@@ -67,12 +76,14 @@
 <script>
     import DebtListElem from '@/components/DebtListElem'
     import RepaymentListElem from  '@/components/RepaymentListElem'
+    import AddDebtModal from '@/components/AddDebtModal'
+    import AccessCodeModal from '@/components/AccessCodeModal'
     import {customAxios, NProgress} from '@/services/axios.service'
     import authHeader from '@/services/auth-header'
 
     export default {
     name: 'Team',
-    components: {DebtListElem, RepaymentListElem},
+    components: {DebtListElem, RepaymentListElem, AddDebtModal, AccessCodeModal},
     data() {
         return {
             id: this.$route.params.id,
@@ -90,13 +101,17 @@
             repayments: {
                 debts: [],
                 credits: []
-            }
+            },
+            members: [],
+            showAddDebt: false,
+            showAccessCode: false
         }
     },
     created() {
         this.fetchTeam()
         this.fetchDebts()
         this.fetchRepayments()
+        this.fetchMembers()
     },
     methods: {
         async fetchTeam() {
@@ -116,7 +131,7 @@
         async fetchDebts() {
             customAxios.get(`/team/${this.id}/debts`, {headers: authHeader()})
             .then(Response => {
-                this.debts = Response.data.data
+                this.debts = Response.data.data.sort((a,b) => (a.createdAt < b.createdAt) ? 1 : ((b.createdAt < a.createdAt) ? -1 : 0))
                 console.log(Response.data.data)
             })
             .catch(error => {
@@ -130,6 +145,17 @@
                 this.repayments.debts = Response.data.data.debts
                 this.repayments.credits = Response.data.data.credits
                 console.log(Response.data.data)
+            })
+            .catch(error => {
+                NProgress.done()
+                console.log(error)
+            })
+        },
+        async fetchMembers() {
+            customAxios.get(`/team/${this.id}/members`, {headers: authHeader()})
+            .then(Response => {
+                this.members = Response.data.data
+                console.log(this.members)
             })
             .catch(error => {
                 NProgress.done()
