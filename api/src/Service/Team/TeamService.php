@@ -10,6 +10,7 @@ use App\FileUploader\FileUploader;
 use App\Repository\TeamAccessCodeRepository;
 use App\Repository\TeamRepository;
 use App\Service\Validator\ValidatorDTOInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -190,7 +191,10 @@ class TeamService implements TeamServiceInterface
             throw new ApiException('Użytkownik nie należy do podanego zespołu', statusCode: Response::HTTP_NOT_FOUND);
         }
 
-        return $team->getUsers();
+        $members = $team->getUsers();
+        $members->removeElement($user);
+
+        return new ArrayCollection($members->getValues());
     }
 
     /**
