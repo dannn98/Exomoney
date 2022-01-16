@@ -68,22 +68,6 @@ class RepaymentRepository extends ServiceEntityRepository
         $qb->getQuery()->execute();
     }
 
-    public function getRepaymentsFromTeam(Team $team): ?array
-    {
-        $qb = $this->createQueryBuilder('p');
-        $qb
-            ->select()
-            ->from(Repayment::class, 'r')
-            ->leftJoin('r.debtor', 'd')
-            ->leftJoin('r.creditor', 'c')
-            ->where('r.team = :team')
-            ->setParameter('team', $team);
-
-        $query = $qb->getQuery();
-
-        return $query->getResult();
-    }
-
     // /**
     //  * @return Repayment[] Returns an array of Repayment objects
     //  */

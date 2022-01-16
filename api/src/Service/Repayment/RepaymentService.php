@@ -212,7 +212,10 @@ class RepaymentService implements RepaymentServiceInterface
         $newRepayments = array();
 
         //Pobranie danych z bazy
-        $oldRepayments = $this->repaymentRepository->getRepaymentsFromTeam($team);
+        $oldRepayments = $this->repaymentRepository->findBy([
+            'team' => $team
+        ]);
+
         if ($oldRepayments === null) {
             return;
         }

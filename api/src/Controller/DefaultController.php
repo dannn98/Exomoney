@@ -82,7 +82,7 @@ class DefaultController extends AbstractController
     #[Route(path: '/optimise', name: 'optimise', methods: ['GET'])]
     public function optimise(): ApiResponse
     {
-        $team = $this->teamRepository->find(29);
+        $team = $this->teamRepository->find(12);
         $this->repaymentService->optimiseRepayments($team);
 
         return new ApiResponse('ok');
