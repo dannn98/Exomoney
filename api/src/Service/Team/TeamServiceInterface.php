@@ -4,6 +4,7 @@ namespace App\Service\Team;
 
 use App\DataObject\TeamAccessCodeDataObject;
 use App\DataObject\TeamDataObject;
+use App\Entity\Team;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -11,9 +12,11 @@ interface TeamServiceInterface
 {
     const DEFAULT_AVATAR = 'default.png';
 
-    public function createTeam(TeamDataObject $dto, UserInterface $user): bool;
+    public function getTeam(int $teamId, UserInterface $user): Team;
 
-    public function joinTeam(TeamAccessCodeDataObject $dto, UserInterface $user): bool;
+    public function createTeam(TeamDataObject $dto, UserInterface $user): int;
+
+    public function joinTeam(TeamAccessCodeDataObject $dto, UserInterface $user): int;
 
     public function getDebtList(int $teamId, UserInterface $user): Collection;
 

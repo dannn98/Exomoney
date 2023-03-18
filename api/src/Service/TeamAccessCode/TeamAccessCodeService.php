@@ -32,16 +32,40 @@ class TeamAccessCodeService implements TeamAccessCodeServiceInterface
      * @param TeamRepository $teamRepository
      */
     public function __construct(
-        ValidatorDTOInterface      $validator,
+        ValidatorDTOInterface $validator,
         RandomCodeGeneratorService $randomCodeGeneratorService,
-        TeamAccessCodeRepository   $teamAccessCodeRepository,
-        TeamRepository             $teamRepository
+        TeamAccessCodeRepository $teamAccessCodeRepository,
+        TeamRepository $teamRepository
     )
     {
         $this->validator = $validator;
         $this->randomCodeGeneratorService = $randomCodeGeneratorService;
         $this->teamAccessCodeRepository = $teamAccessCodeRepository;
         $this->teamRepository = $teamRepository;
+    }
+
+    /**
+     * Get TeamAccessCode
+     *
+     * @param int $teamId
+     * @param UserInterface $user
+     *
+     * @return string
+     * @throws ApiException
+     */
+    public function getTeamAccessCode(int $teamId, UserInterface $user): string
+    {
+        $team = $this->teamRepository->findOneBy(['id' => $teamId]);
+
+        if ($team === null) {
+            throw new ApiException('Zespół o podanym id nie istnieje', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        if ($team->getOwner()->getId() != $user->getId()) {
+            throw new ApiException('Użytkownik nie jest właścicielem', statusCode: Response::HTTP_FORBIDDEN);
+        }
+
+        return isset($team->getTeamAccessCodes()[0]) ? $team->getTeamAccessCodes()[0]->getCode() : '';
     }
 
     /**
@@ -58,6 +82,10 @@ class TeamAccessCodeService implements TeamAccessCodeServiceInterface
 
         if ($team === null) {
             throw new ApiException('Zespół o podanym id nie istnieje', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        if ($team->getOwner()->getId() != $user->getId()) {
+            throw new ApiException('Użytkownik nie jest właścicielem', statusCode: Response::HTTP_FORBIDDEN);
         }
 
         $code = $this->randomCodeGeneratorService->getCode();

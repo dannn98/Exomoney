@@ -20,6 +20,7 @@ class Repayment
     /**
      * @ORM\Column(type="string", nullable=false, unique=true)
      */
+    #[Groups(['Get_repayment_list'])]
     private $uid;
 
     /**
@@ -110,5 +111,10 @@ class Repayment
         $this->value = $value;
 
         return $this;
+    }
+
+    public function getUid(): ?string
+    {
+        return $this->uid;
     }
 }

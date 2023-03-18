@@ -10,9 +10,11 @@ use App\FileUploader\FileUploader;
 use App\Repository\TeamAccessCodeRepository;
 use App\Repository\TeamRepository;
 use App\Service\Validator\ValidatorDTOInterface;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -44,15 +46,42 @@ class TeamService implements TeamServiceInterface
     }
 
     /**
+     * @param int $teamId
+     *
+     * @return Team
+     * @throws ApiException
+     */
+    public function getTeam(int $teamId, UserInterface $user): Team
+    {
+        $team = $this->teamRepository->findOneBy(['id' => $teamId]);
+
+        if (!$team) {
+            throw new ApiException('Zespół o podanym id nie istnieje', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        if (!$team->getUsers()->contains($user)) {
+            throw new ApiException('Użytkownik nie należy do podanego zespołu', statusCode: Response::HTTP_NOT_FOUND);
+        }
+
+        $team->setAvatarUrl(
+            Request::createFromGlobals()->getSchemeAndHttpHost() .
+            $this->fileUploader->getTargetUrl() .
+            $team->getAvatarUrl()
+        );
+
+        return $team;
+    }
+
+    /**
      * Create Team
      *
      * @param TeamDataObject $dto
      * @param UserInterface $user
      *
-     * @return bool
+     * @return int
      * @throws ApiException
      */
-    public function createTeam(TeamDataObject $dto, UserInterface $user): bool
+    public function createTeam(TeamDataObject $dto, UserInterface $user): int
     {
         $this->validator->validate($dto);
 
@@ -70,7 +99,7 @@ class TeamService implements TeamServiceInterface
 
         }
 
-        return true;
+        return $team->getId();
     }
 
     /**
@@ -79,11 +108,12 @@ class TeamService implements TeamServiceInterface
      * @param TeamAccessCodeDataObject $dto
      * @param UserInterface $user
      *
-     * @return bool
+     * @return int
      * @throws ApiException
      */
-    public function joinTeam(TeamAccessCodeDataObject $dto, UserInterface $user): bool
+    public function joinTeam(TeamAccessCodeDataObject $dto, UserInterface $user): int
     {
+        $team = null;
         $this->validator->validate($dto, [$dto::JOIN_GROUP]);
 
         try {
@@ -113,7 +143,7 @@ class TeamService implements TeamServiceInterface
 
         }
 
-        return true;
+        return $team->getId();
     }
 
     /**
@@ -161,7 +191,10 @@ class TeamService implements TeamServiceInterface
             throw new ApiException('Użytkownik nie należy do podanego zespołu', statusCode: Response::HTTP_NOT_FOUND);
         }
 
-        return $team->getUsers();
+        $members = $team->getUsers();
+        $members->removeElement($user);
+
+        return new ArrayCollection($members->getValues());
     }
 
     /**

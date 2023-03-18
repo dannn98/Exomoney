@@ -25,25 +25,26 @@ class Team
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['Get_team_list'])]
+    #[Groups(['Get_team_list', 'Get_team'])]
     private int $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
+    #[Groups(['Get_team'])]
     private User $owner;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['Get_team_list'])]
+    #[Groups(['Get_team_list', 'Get_team'])]
     private string $name;
 
     /**
      * @ORM\Column(type="string", length=1024)
      */
-    #[Groups(['Get_team_list'])]
+    #[Groups(['Get_team_list', 'Get_team'])]
     private string $avatarUrl;
 
     /**

@@ -29,6 +29,14 @@ class TeamAccessCodeController extends AbstractController
         $this->teamAccessCodeService = $teamAccessCodeService;
     }
 
+    #[Route(path: '/team/{teamId}', name: 'get', methods: ['GET'])]
+    public function show(int $teamId): ApiResponse
+    {
+        $data = $this->teamAccessCodeService->getTeamAccessCode($teamId, $this->getUser());
+
+        return new ApiResponse('Kod dostępu dla zespołu o id ' . $teamId, data: $data, status: Response::HTTP_OK);
+    }
+
     #[Route(name: 'add', methods: ['POST'])]
     public function add(Request $request): ApiResponse
     {

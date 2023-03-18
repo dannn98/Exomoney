@@ -28,19 +28,19 @@ class User implements UserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    #[Groups(['Get_debt_list', 'Get_member_list', 'Get_repayment_list'])]
+    #[Groups(['Get_debt_list', 'Get_member_list', 'Get_repayment_list', 'Get_team'])]
     private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      */
-    #[Groups(['Get_debt_list', 'Get_member_list', 'Get_repayment_list'])]
+    #[Groups(['Get_debt_list', 'Get_member_list', 'Get_repayment_list', 'Get_team'])]
     private ?string $email;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    #[Groups(['Get_debt_list', 'Get_member_list', 'Get_repayment_list'])]
+    #[Groups(['Get_debt_list', 'Get_member_list', 'Get_repayment_list', 'Get_team'])]
     private $nickname;
 
     /**
